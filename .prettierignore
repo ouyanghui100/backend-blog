@@ -1,0 +1,41 @@
+# 依赖和构建产物
+node_modules/
+dist/
+build/
+coverage/
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 配置文件
+.env
+.env.local
+.env.*.local
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 包管理器文件
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 文档和markdown（如果不需要格式化）
+# *.md
+# README.md
+
+# 生成的文件
+*.d.ts 
