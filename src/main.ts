@@ -29,6 +29,9 @@ async function bootstrap(): Promise<void> {
   // 设置全局路径前缀
   app.setGlobalPrefix('api');
 
+  // 获取端口号
+  const port = process.env.PORT ?? 3000;
+
   // 配置 Swagger 文档
   const config = new DocumentBuilder()
     .setTitle('React-Nest 博客后端 API')
@@ -49,22 +52,37 @@ async function bootstrap(): Promise<void> {
       - **后端框架**：NestJS
       - **数据库**：MySQL + TypeORM
       - **语言**：TypeScript
-      - **文档**：Swagger/OpenAPI
+      - **文档**：Swagger/OpenAPI 3.0
 
       ### 通用说明
       - 所有时间字段统一返回 \`YYYY-MM-DD HH:mm:ss\` 格式
       - API 响应统一使用 \`ApiResponseDto\` 格式
       - 支持 CORS 跨域请求
+
+      ### Swagger JSON 导入地址
+      \`\`\`
+      http://localhost:${port}/api/docs-json
+      \`\`\`
     `,
     )
     .setVersion('1.0.0')
+    .addServer(`http://localhost:${port}`, '本地开发环境')
+    .addServer('https://api.yourdomain.com', '生产环境')
+    .addServer('https://staging-api.yourdomain.com', '测试环境')
     .addTag('tags', '标签管理 - 文章标签的增删改查')
     .addTag('categories', '分类管理 - 文章分类的增删改查')
     .addTag('auth', '认证授权 - 用户登录注册')
     .addTag('users', '用户管理 - 用户信息管理')
     .addTag('articles', '文章管理 - 文章发布编辑')
     .addTag('comments', '评论管理 - 评论发布审核')
-    .addBearerAuth()
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: '输入JWT token',
+      in: 'header',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -83,7 +101,6 @@ async function bootstrap(): Promise<void> {
     `,
   });
 
-  const port = process.env.PORT ?? 3000;
   await app.listen(port);
 
   logger.log(`🚀 应用成功启动，监听端口: ${port}`);
