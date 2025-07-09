@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,7 +13,6 @@ import { Article } from './article.entity';
  * 简化的分类结构
  */
 @Entity('categories')
-@Index(['sort']) // 排序优化
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,10 +24,6 @@ export class Category {
   // === 关联文章 ===
   @OneToMany(() => Article, article => article.category)
   articles: Article[];
-
-  // === 显示和排序 ===
-  @Column({ default: 0, comment: '排序权重 (数字越大越靠前)' })
-  sort: number;
 
   // === 统计信息 ===
   @Column({ default: 0, comment: '文章数量' })

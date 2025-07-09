@@ -24,22 +24,3 @@ export class TagResponseDto extends BaseResponseDto {
     this.formatBaseTimeFields(tag);
   }
 }
-
-/**
- * 分页响应 DTO
- */
-export class PaginatedTagResponseDto {
-  data: TagResponseDto[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-
-  constructor(tags: Tag[], total: number, page: number, limit: number) {
-    this.data = tags.map(tag => new TagResponseDto(tag));
-    this.total = total;
-    this.page = page;
-    this.limit = limit;
-    this.totalPages = Math.ceil(total / limit);
-  }
-}

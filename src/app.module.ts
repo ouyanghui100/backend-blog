@@ -4,6 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import databaseConfig from './config/database.config';
+import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
 
 @Module({
@@ -27,6 +28,7 @@ import { TagModule } from './modules/tag/tag.module';
     }),
     // 功能模块
     TagModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
