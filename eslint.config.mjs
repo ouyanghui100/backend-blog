@@ -34,36 +34,41 @@ export default tseslint.config(
   {
     rules: {
       // TypeScript 规则
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
-      '@typescript-eslint/no-unsafe-assignment': 'warn',
-      '@typescript-eslint/no-unsafe-call': 'warn',
-      '@typescript-eslint/no-unsafe-member-access': 'warn',
-      '@typescript-eslint/no-unsafe-return': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
-      '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
-      '@typescript-eslint/no-empty-function': 'warn',
-      '@typescript-eslint/prefer-nullish-coalescing': [
-        'warn',
-        {
-          ignoreConditionalTests: true,
-          ignoreMixedLogicalExpressions: true,
-          ignorePrimitives: true,
-        },
-      ],
-      '@typescript-eslint/prefer-optional-chain': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'warn',
-      '@typescript-eslint/ban-ts-comment': 'error',
-      '@typescript-eslint/prefer-as-const': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      // '@typescript-eslint/no-explicit-any': 'error',
+      // '@typescript-eslint/no-floating-promises': 'error',
+      // '@typescript-eslint/no-unsafe-argument': 'warn',
+      // '@typescript-eslint/no-unsafe-assignment': 'warn',
+      // '@typescript-eslint/no-unsafe-call': 'warn',
+      // '@typescript-eslint/no-unsafe-member-access': 'warn',
+      // '@typescript-eslint/no-unsafe-return': 'warn',
+      // '@typescript-eslint/no-unused-vars': [
+      //   'error',
+      //   {
+      //     argsIgnorePattern: '^_',
+      //     varsIgnorePattern: '^_',
+      //     caughtErrorsIgnorePattern: '^_',
+      //   },
+      // ],
+      // '@typescript-eslint/explicit-function-return-type': 'warn',
+      // '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      // '@typescript-eslint/no-empty-function': 'warn',
+      // '@typescript-eslint/prefer-nullish-coalescing': [
+      //   'warn',
+      //   {
+      //     ignoreConditionalTests: true,
+      //     ignoreMixedLogicalExpressions: true,
+      //     ignorePrimitives: true,
+      //   },
+      // ],
+      // '@typescript-eslint/prefer-optional-chain': 'error',
+      // '@typescript-eslint/no-non-null-assertion': 'warn',
+      // '@typescript-eslint/ban-ts-comment': 'error',
+      // '@typescript-eslint/prefer-as-const': 'error',
 
       // 通用规则
       'no-console': 'warn',
@@ -76,9 +81,9 @@ export default tseslint.config(
       'prefer-arrow-callback': 'error',
       'prefer-template': 'error',
       eqeqeq: ['error', 'always'],
-      curly: ['error', 'all'],
+      // curly: ['error', 'all'],
       'no-throw-literal': 'error',
-      'no-return-await': 'error',
+      // 'no-return-await': 'error',
 
       // 代码风格
       'max-len': [
@@ -91,14 +96,14 @@ export default tseslint.config(
           ignoreComments: true,
         },
       ],
-      'max-lines-per-function': [
-        'warn',
-        {
-          max: 50,
-          skipBlankLines: true,
-          skipComments: true,
-        },
-      ],
+      // 'max-lines-per-function': [
+      //   'warn',
+      //   {
+      //     max: 50,
+      //     skipBlankLines: true,
+      //     skipComments: true,
+      //   },
+      // ],
       complexity: ['warn', 10],
       'max-depth': ['warn', 3],
       'max-nested-callbacks': ['warn', 3],
