@@ -8,10 +8,10 @@ import { Article, ArticleStatus } from './article.entity';
 import { Category } from './category.entity';
 import { Comment, CommentStatus } from './comment.entity';
 import { Tag } from './tag.entity';
-import { User, UserRole, UserType } from './user.entity';
+import { User, UserRole } from './user.entity';
 
 // 用户相关
-export { User, UserRole, UserType };
+export { User, UserRole };
 
 // 文章相关
 export { Article, ArticleStatus };

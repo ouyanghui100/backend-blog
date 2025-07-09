@@ -139,9 +139,7 @@ export class Comment {
    * 实用方法：获取评论者邮箱
    */
   get commenterEmail(): string {
-    if (this.user) {
-      return this.user.email;
-    }
+    // User实体暂不包含邮箱，优先使用游客邮箱
     return this.guestEmail || '';
   }
 
@@ -149,9 +147,7 @@ export class Comment {
    * 实用方法：获取评论者网站
    */
   get commenterWebsite(): string {
-    if (this.user) {
-      return this.user.website || '';
-    }
+    // User实体暂不包含网站，优先使用游客网站
     return this.guestWebsite || '';
   }
 }

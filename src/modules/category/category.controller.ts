@@ -9,13 +9,15 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -23,6 +25,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { MethodGuard } from '../../auth/guards/method.guard';
 import { CategorySeedService } from './category-seed.service';
 import { CategoryService } from './category.service';
 import {
@@ -36,9 +40,12 @@ import {
 /**
  * 分类控制器
  * 提供分类相关的 RESTful API
+ * 后台访问需要JWT认证，游客只能执行GET操作
  */
 @ApiTags('categories')
 @Controller('categories')
+@UseGuards(JwtAuthGuard, MethodGuard) // 添加JWT认证和方法权限守卫
+@ApiBearerAuth() // 标记需要Bearer Token认证
 @UsePipes(new ValidationPipe({ transform: true }))
 export class CategoryController {
   constructor(
@@ -383,7 +390,7 @@ export class CategoryController {
     status: 404,
     description: '分类不存在',
   })
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,

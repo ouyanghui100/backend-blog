@@ -9,13 +9,15 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -23,6 +25,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { MethodGuard } from '../../auth/guards/method.guard';
 import {
   ApiResponseDto,
   CreateTagDto,
@@ -36,9 +40,12 @@ import { TagService } from './tag.service';
 /**
  * 标签控制器
  * 提供标签相关的 RESTful API
+ * 后台访问需要JWT认证，游客只能执行GET操作
  */
 @ApiTags('tags')
 @Controller('tags')
+@UseGuards(JwtAuthGuard, MethodGuard) // 添加JWT认证和方法权限守卫
+@ApiBearerAuth() // 标记需要Bearer Token认证
 @UsePipes(new ValidationPipe({ transform: true }))
 export class TagController {
   constructor(
@@ -350,7 +357,7 @@ export class TagController {
     status: 404,
     description: '标签不存在',
   })
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTagDto: UpdateTagDto,
