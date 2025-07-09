@@ -38,18 +38,14 @@ export class TagController {
   ) {}
 
   /**
-   * 初始化种子数据
+   * 重置标签数据（开发环境使用）
+   * 会删除所有现有标签并重新创建默认标签
    */
-  @Post('seed')
+  @Post('reset')
   @HttpCode(HttpStatus.OK)
-  async seedTags(): Promise<ApiResponseDto<null>> {
-    try {
-      await this.tagSeedService.seedTags();
-      return ApiResponseDto.success(null, '标签种子数据初始化成功');
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '未知错误';
-      return ApiResponseDto.error('标签种子数据初始化失败', errorMessage);
-    }
+  async resetTags(): Promise<ApiResponseDto<null>> {
+    await this.tagSeedService.resetTags();
+    return ApiResponseDto.success(null, '标签数据重置成功');
   }
 
   /**

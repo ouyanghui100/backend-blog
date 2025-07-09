@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateTagDto } from './dto';
 import { TagService } from './tag.service';
 
@@ -7,10 +7,41 @@ import { TagService } from './tag.service';
  * 负责初始化系统默认标签
  */
 @Injectable()
-export class TagSeedService {
+export class TagSeedService implements OnModuleInit {
   private readonly logger = new Logger(TagSeedService.name);
 
   constructor(private readonly tagService: TagService) {}
+
+  /**
+   * 模块初始化时自动检查并初始化标签数据
+   */
+  async onModuleInit(): Promise<void> {
+    try {
+      await this.autoInitializeTags();
+    } catch (error) {
+      this.logger.error('自动初始化标签数据失败', error);
+    }
+  }
+
+  /**
+   * 自动初始化标签数据（仅在数据库为空时）
+   */
+  private async autoInitializeTags(): Promise<void> {
+    this.logger.log('检查标签数据...');
+
+    // 检查数据库中是否已存在标签
+    const existingTags = await this.tagService.findAll({});
+
+    if (existingTags.length > 0) {
+      this.logger.log(
+        `数据库中已存在 ${existingTags.length} 个标签，跳过初始化`,
+      );
+      return;
+    }
+
+    this.logger.log('数据库中无标签数据，开始自动初始化...');
+    await this.seedTags();
+  }
 
   /**
    * 初始化默认标签
