@@ -1,6 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOptionsWhere,
+  Like,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import { Category } from '../../entities/category.entity';
 import { CreateCategoryDto, QueryCategoryDto, UpdateCategoryDto } from './dto';
 
@@ -71,11 +77,14 @@ export class CategoryService {
 
   /**
    * 获取热门分类（按文章数量排序）
+   * 返回所有文章数量大于等于10的分类
    */
-  async getPopularCategories(limit: number = 10): Promise<Category[]> {
+  async getPopularCategories(
+    minArticleCount: number = 10,
+  ): Promise<Category[]> {
     return await this.categoryRepository.find({
+      where: { articleCount: MoreThanOrEqual(minArticleCount) },
       order: { articleCount: 'DESC' },
-      take: limit,
     });
   }
 

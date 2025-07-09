@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponseDto } from '../../../common/dto/base-response.dto';
-import { DateUtil } from '../../../common/utils/date.util';
 import { Tag } from '../../../entities/tag.entity';
 
 /**
@@ -55,12 +54,19 @@ export class TagResponseDto extends BaseResponseDto {
     this.id = tag.id;
     this.name = tag.name;
     this.usageCount = tag.usageCount;
-    this.createdAt = tag.createdAt.toISOString().replace('T', ' ').substring(0, 19);
-    this.updatedAt = tag.updatedAt.toISOString().replace('T', ' ').substring(0, 19);
+    this.createdAt = tag.createdAt
+      .toISOString()
+      .replace('T', ' ')
+      .substring(0, 19);
+    this.updatedAt = tag.updatedAt
+      .toISOString()
+      .replace('T', ' ')
+      .substring(0, 19);
     this.lastUsedAt = tag.lastUsedAt
       ? tag.lastUsedAt.toISOString().replace('T', ' ').substring(0, 19)
       : null;
-    this.isPopular = tag.usageCount > 5;
+    // 使用次数大于等于10次则认为是热门标签
+    this.isPopular = tag.usageCount >= 10;
 
     // 使用父类方法格式化基础时间字段
     this.formatBaseTimeFields(tag);

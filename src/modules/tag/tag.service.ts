@@ -76,11 +76,12 @@ export class TagService {
 
   /**
    * 获取热门标签
+   * 返回所有使用次数大于等于10的标签（被文章引用10次以上）
    */
-  async getPopularTags(limit: number = 10): Promise<Tag[]> {
+  async getPopularTags(minUsageCount: number = 10): Promise<Tag[]> {
     return await this.tagRepository.find({
+      where: { usageCount: MoreThanOrEqual(minUsageCount) },
       order: { usageCount: 'DESC' },
-      take: limit,
     });
   }
 
@@ -121,7 +122,8 @@ export class TagService {
   }> {
     const [total, popularTags] = await Promise.all([
       this.tagRepository.count(),
-      this.tagRepository.find({ where: { usageCount: MoreThanOrEqual(5) } }),
+      // 使用10作为热门标签的阈值，与getPopularTags保持一致
+      this.tagRepository.find({ where: { usageCount: MoreThanOrEqual(10) } }),
     ]);
 
     const totalUsageResult = await this.tagRepository

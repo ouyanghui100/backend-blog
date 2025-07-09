@@ -174,13 +174,14 @@ export class TagController {
    */
   @ApiOperation({
     summary: '获取热门标签',
-    description: '获取使用次数最多的标签列表',
+    description:
+      '获取所有使用次数达到指定阈值的热门标签（被文章引用次数多的标签）',
   })
   @ApiQuery({
-    name: 'limit',
+    name: 'minUsage',
     required: false,
-    description: '返回数量限制，默认10个',
-    example: 5,
+    description: '最小使用次数阈值，默认10次（被文章引用10次以上算热门）',
+    example: 10,
   })
   @ApiResponse({
     status: 200,
@@ -205,13 +206,16 @@ export class TagController {
   })
   @Get('popular')
   async getPopular(
-    @Query('limit') limitQuery?: string,
+    @Query('minUsage') minUsageQuery?: string,
   ): Promise<ApiResponseDto<TagResponseDto[]>> {
     try {
-      const limit = limitQuery ? parseInt(limitQuery, 10) : 10;
-      const tags = await this.tagService.getPopularTags(limit);
+      const minUsage = minUsageQuery ? parseInt(minUsageQuery, 10) : 10;
+      const tags = await this.tagService.getPopularTags(minUsage);
       const result = tags.map(tag => new TagResponseDto(tag));
-      return ApiResponseDto.success(result, '获取热门标签成功');
+      return ApiResponseDto.success(
+        result,
+        `获取热门标签成功，共找到 ${result.length} 个热门标签`,
+      );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       // 统一返回空数组，避免类型不匹配

@@ -177,13 +177,13 @@ export class CategoryController {
    */
   @ApiOperation({
     summary: '获取热门分类',
-    description: '获取文章数量最多的分类列表',
+    description: '获取所有文章数量达到指定阈值的热门分类（包含文章数多的分类）',
   })
   @ApiQuery({
-    name: 'limit',
+    name: 'minArticles',
     required: false,
-    description: '返回数量限制，默认10个',
-    example: 5,
+    description: '最小文章数量阈值，默认10篇（分类下有10篇以上文章算热门）',
+    example: 10,
   })
   @ApiResponse({
     status: 200,
@@ -206,15 +206,21 @@ export class CategoryController {
   })
   @Get('popular')
   async getPopular(
-    @Query('limit') limitQuery?: string,
+    @Query('minArticles') minArticlesQuery?: string,
   ): Promise<ApiResponseDto<CategoryResponseDto[]>> {
     try {
-      const limit = limitQuery ? parseInt(limitQuery, 10) : 10;
-      const categories = await this.categoryService.getPopularCategories(limit);
+      const minArticles = minArticlesQuery
+        ? parseInt(minArticlesQuery, 10)
+        : 10;
+      const categories =
+        await this.categoryService.getPopularCategories(minArticles);
       const result = categories.map(
         category => new CategoryResponseDto(category),
       );
-      return ApiResponseDto.success(result, '获取热门分类成功');
+      return ApiResponseDto.success(
+        result,
+        `获取热门分类成功，共找到 ${result.length} 个热门分类`,
+      );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       // 统一返回空数组，避免类型不匹配
