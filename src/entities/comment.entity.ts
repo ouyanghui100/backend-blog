@@ -86,15 +86,7 @@ export class Comment {
   @JoinColumn({ name: 'parentId' })
   parent?: Comment;
 
-  // === 技术信息 ===
-  @Column({ type: 'varchar', length: 15, nullable: true, comment: 'IP地址' })
-  ipAddress?: string;
-
-  @Column({ type: 'text', nullable: true, comment: '用户代理信息' })
-  userAgent?: string;
-
   // === 审核信息 ===
-
   @Column({ type: 'datetime', nullable: true, comment: '审核时间' })
   reviewedAt?: Date;
 
