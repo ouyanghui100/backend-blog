@@ -79,10 +79,6 @@ export class CategoryController {
     summary: '创建分类',
     description: '创建一个新的分类',
   })
-  @ApiBody({
-    type: CreateCategoryDto,
-    description: '创建分类的请求体',
-  })
   @ApiResponse({
     status: 201,
     description: '分类创建成功',
@@ -95,7 +91,26 @@ export class CategoryController {
           name: '前端开发',
           articleCount: 0,
           createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-15 18:30:45',
+          updatedAt: null, // 创建时为null
+        },
+      },
+    },
+  })
+  @ApiBody({
+    type: CreateCategoryDto,
+    description: '创建分类的请求体',
+    examples: {
+      basic: {
+        summary: '基本创建（使用默认时间）',
+        value: {
+          name: '前端开发',
+        },
+      },
+      withTime: {
+        summary: '指定创建时间',
+        value: {
+          name: '前端开发',
+          createdAt: '2024-01-15 18:30:45',
         },
       },
     },
@@ -327,6 +342,21 @@ export class CategoryController {
   @ApiBody({
     type: UpdateCategoryDto,
     description: '更新分类的请求体',
+    examples: {
+      basic: {
+        summary: '基本更新（使用默认时间）',
+        value: {
+          name: '全栈开发',
+        },
+      },
+      withTime: {
+        summary: '指定更新时间',
+        value: {
+          name: '全栈开发',
+          updatedAt: '2024-01-16 10:20:30',
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 200,

@@ -5,7 +5,6 @@ import {
   Index,
   ManyToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Article } from './article.entity';
 
@@ -31,21 +30,25 @@ export class Tag {
   @Column({ default: 0, comment: '使用次数/关联文章数' })
   usageCount: number;
 
+  /**
+   * 实用方法：检查是否为热门标签
+   * 定义：使用次数 >= 10 为热门标签
+   */
+  get isPopular(): boolean {
+    return this.usageCount >= 10;
+  }
+
   // === 时间字段 ===
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;
 
-  @UpdateDateColumn({ comment: '更新时间' })
-  updatedAt: Date;
+  @Column({
+    type: 'datetime',
+    nullable: true,
+    comment: '更新时间（只在真正更新时设置）',
+  })
+  updatedAt?: Date;
 
   @Column({ type: 'datetime', nullable: true, comment: '最后使用时间' })
   lastUsedAt?: Date;
-
-  /**
-   * 实用方法：检查是否为热门标签
-   * 定义：使用次数 >= 5 为热门标签
-   */
-  get isPopular(): boolean {
-    return this.usageCount >= 5;
-  }
 }

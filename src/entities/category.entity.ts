@@ -4,7 +4,6 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Article } from './article.entity';
 
@@ -33,6 +32,10 @@ export class Category {
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;
 
-  @UpdateDateColumn({ comment: '更新时间' })
-  updatedAt: Date;
+  @Column({
+    type: 'datetime',
+    nullable: true,
+    comment: '更新时间（只在真正更新时设置）',
+  })
+  updatedAt?: Date;
 }

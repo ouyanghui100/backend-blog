@@ -1,76 +1,43 @@
 /**
- * 日期时间工具类
- * 提供统一的时间格式化功能
+ * 日期工具类
  */
 export class DateUtil {
   /**
-   * 将 Date 对象格式化为 YYYY-MM-DD HH:mm:ss 格式
-   * @param date - 要格式化的日期对象
-   * @returns 格式化后的时间字符串，如果输入为空则返回 null
+   * 将 Date 对象格式化为 'YYYY-MM-DD HH:mm:ss' 格式
    */
   static formatDateTime(date: Date | null | undefined): string | null {
-    if (!date) {
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
       return null;
     }
 
-    const d = new Date(date);
-
-    // 检查日期是否有效
-    if (isNaN(d.getTime())) {
-      return null;
-    }
-
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const seconds = String(d.getSeconds()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return date.toISOString().replace('T', ' ').substring(0, 19);
   }
 
   /**
-   * 将 Date 对象转换为时间戳（毫秒）
-   * @param date - 要转换的日期对象
-   * @returns 时间戳，如果输入为空则返回 null
+   * 解析前端传入的日期字符串，支持多种格式
+   * @param dateString - 日期字符串
+   * @returns Date对象或null
    */
-  static toTimestamp(date: Date | null | undefined): number | null {
-    if (!date) {
-      return null;
+  static parseDateTime(dateString: string | undefined): Date | undefined {
+    if (!dateString) {
+      return undefined;
     }
 
-    const d = new Date(date);
+    // 尝试解析日期字符串
+    const date = new Date(dateString);
 
-    // 检查日期是否有效
-    if (isNaN(d.getTime())) {
-      return null;
+    // 检查是否为有效日期
+    if (isNaN(date.getTime())) {
+      throw new Error(`无效的日期格式: ${dateString}`);
     }
 
-    return d.getTime();
+    return date;
   }
 
   /**
-   * 将 Date 对象格式化为仅日期格式 YYYY-MM-DD
-   * @param date - 要格式化的日期对象
-   * @returns 格式化后的日期字符串，如果输入为空则返回 null
+   * 获取当前时间
    */
-  static formatDate(date: Date | null | undefined): string | null {
-    if (!date) {
-      return null;
-    }
-
-    const d = new Date(date);
-
-    // 检查日期是否有效
-    if (isNaN(d.getTime())) {
-      return null;
-    }
-
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+  static now(): Date {
+    return new Date();
   }
 }

@@ -79,10 +79,6 @@ export class TagController {
     summary: '创建标签',
     description: '创建一个新的标签',
   })
-  @ApiBody({
-    type: CreateTagDto,
-    description: '创建标签的请求体',
-  })
   @ApiResponse({
     status: 201,
     description: '标签创建成功',
@@ -95,9 +91,28 @@ export class TagController {
           name: 'JavaScript',
           usageCount: 0,
           createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-15 18:30:45',
+          updatedAt: null, // 创建时为null
           lastUsedAt: null,
           isPopular: false,
+        },
+      },
+    },
+  })
+  @ApiBody({
+    type: CreateTagDto,
+    description: '创建标签的请求体',
+    examples: {
+      basic: {
+        summary: '基本创建（使用默认时间）',
+        value: {
+          name: 'JavaScript',
+        },
+      },
+      withTime: {
+        summary: '指定创建时间',
+        value: {
+          name: 'JavaScript',
+          createdAt: '2024-01-15 18:30:45',
         },
       },
     },
@@ -292,6 +307,21 @@ export class TagController {
   @ApiBody({
     type: UpdateTagDto,
     description: '更新标签的请求体',
+    examples: {
+      basic: {
+        summary: '基本更新（使用默认时间）',
+        value: {
+          name: 'TypeScript',
+        },
+      },
+      withTime: {
+        summary: '指定更新时间',
+        value: {
+          name: 'TypeScript',
+          updatedAt: '2024-01-16 10:20:30',
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 200,

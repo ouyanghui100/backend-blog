@@ -7,6 +7,7 @@ import {
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
+import { DateUtil } from '../../common/utils/date.util';
 import { Tag } from '../../entities/tag.entity';
 import { CreateTagDto, QueryTagDto, UpdateTagDto } from './dto';
 
@@ -25,7 +26,14 @@ export class TagService {
    * 创建标签
    */
   async create(createTagDto: CreateTagDto): Promise<Tag> {
-    const tag = this.tagRepository.create(createTagDto);
+    const tag = this.tagRepository.create({
+      name: createTagDto.name,
+      // 优先使用前端传的创建时间，没有的话使用当前时间
+      createdAt:
+        DateUtil.parseDateTime(createTagDto.createdAt) || DateUtil.now(),
+      // 优先使用前端传的更新时间，没有的话为undefined（创建时通常不设置更新时间）
+      updatedAt: DateUtil.parseDateTime(createTagDto.updatedAt),
+    });
     return await this.tagRepository.save(tag);
   }
 
@@ -91,7 +99,14 @@ export class TagService {
   async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
     const tag = await this.findOne(id);
 
-    Object.assign(tag, updateTagDto);
+    // 更新名称（如果提供）
+    if (updateTagDto.name) {
+      tag.name = updateTagDto.name;
+    }
+
+    // 设置更新时间：优先使用前端传的时间，没有的话使用当前时间
+    tag.updatedAt =
+      DateUtil.parseDateTime(updateTagDto.updatedAt) || DateUtil.now();
 
     return await this.tagRepository.save(tag);
   }
@@ -100,8 +115,15 @@ export class TagService {
    * 增加标签使用次数
    */
   async incrementUsage(id: number): Promise<void> {
-    await this.tagRepository.increment({ id }, 'usageCount', 1);
-    await this.tagRepository.update({ id }, { lastUsedAt: new Date() });
+    const currentTime = DateUtil.now();
+    await this.tagRepository.update(
+      { id },
+      {
+        usageCount: () => 'usageCount + 1',
+        lastUsedAt: currentTime,
+        updatedAt: currentTime,
+      },
+    );
   }
 
   /**

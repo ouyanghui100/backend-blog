@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { DateUtil } from '../utils/date.util';
 
 /**
@@ -5,7 +6,7 @@ import { DateUtil } from '../utils/date.util';
  */
 export interface BaseTimeFields {
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date; // 更新时间可选，只在真正更新时才有值
 }
 
 /**
@@ -13,8 +14,18 @@ export interface BaseTimeFields {
  * 提供通用的时间格式化功能
  */
 export abstract class BaseResponseDto {
+  @ApiProperty({
+    description: '创建时间',
+    example: '2024-01-15 18:30:45',
+  })
   createdAt: string;
-  updatedAt: string;
+
+  @ApiProperty({
+    description: '更新时间（只在真正更新时才有值）',
+    example: '2024-01-16 10:20:30',
+    nullable: true,
+  })
+  updatedAt: string | null; // 支持null，创建时为null
 
   /**
    * 格式化基础时间字段
@@ -22,7 +33,10 @@ export abstract class BaseResponseDto {
    */
   protected formatBaseTimeFields(entity: BaseTimeFields): void {
     this.createdAt = DateUtil.formatDateTime(entity.createdAt) || '';
-    this.updatedAt = DateUtil.formatDateTime(entity.updatedAt) || '';
+    // 更新时间只在真正更新时才有值
+    this.updatedAt = entity.updatedAt
+      ? DateUtil.formatDateTime(entity.updatedAt) || null
+      : null;
   }
 }
 

@@ -94,12 +94,6 @@ export class Comment {
   reviewNote?: string;
 
   // === 统计信息 ===
-  @Column({ default: 0, comment: '点赞数' })
-  likeCount: number;
-
-  @Column({ default: 0, comment: '踩数' })
-  dislikeCount: number;
-
   @Column({ default: 0, comment: '回复数量' })
   replyCount: number;
 

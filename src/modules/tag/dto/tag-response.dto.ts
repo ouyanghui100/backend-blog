@@ -25,18 +25,6 @@ export class TagResponseDto extends BaseResponseDto {
   usageCount: number;
 
   @ApiProperty({
-    description: '创建时间',
-    example: '2024-01-15 18:30:45',
-  })
-  createdAt: string;
-
-  @ApiProperty({
-    description: '更新时间',
-    example: '2024-01-15 18:30:45',
-  })
-  updatedAt: string;
-
-  @ApiProperty({
     description: '最后使用时间',
     example: '2024-01-16 10:20:30',
     nullable: true,
@@ -54,21 +42,8 @@ export class TagResponseDto extends BaseResponseDto {
     this.id = tag.id;
     this.name = tag.name;
     this.usageCount = tag.usageCount;
-    this.createdAt = tag.createdAt
-      .toISOString()
-      .replace('T', ' ')
-      .substring(0, 19);
-    this.updatedAt = tag.updatedAt
-      .toISOString()
-      .replace('T', ' ')
-      .substring(0, 19);
-    this.lastUsedAt = tag.lastUsedAt
-      ? tag.lastUsedAt.toISOString().replace('T', ' ').substring(0, 19)
-      : null;
-    // 使用次数大于等于10次则认为是热门标签
-    this.isPopular = tag.usageCount >= 10;
 
-    // 使用父类方法格式化基础时间字段
+    // 使用父类方法格式化基础时间字段（createdAt和updatedAt）
     this.formatBaseTimeFields(tag);
   }
 }

@@ -7,6 +7,7 @@ import {
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
+import { DateUtil } from '../../common/utils/date.util';
 import { Category } from '../../entities/category.entity';
 import { CreateCategoryDto, QueryCategoryDto, UpdateCategoryDto } from './dto';
 
@@ -25,7 +26,14 @@ export class CategoryService {
    * 创建分类
    */
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
-    const category = this.categoryRepository.create(createCategoryDto);
+    const category = this.categoryRepository.create({
+      name: createCategoryDto.name,
+      // 优先使用前端传的创建时间，没有的话使用当前时间
+      createdAt:
+        DateUtil.parseDateTime(createCategoryDto.createdAt) || DateUtil.now(),
+      // 优先使用前端传的更新时间，没有的话为undefined（创建时通常不设置更新时间）
+      updatedAt: DateUtil.parseDateTime(createCategoryDto.updatedAt),
+    });
     return await this.categoryRepository.save(category);
   }
 
@@ -97,7 +105,14 @@ export class CategoryService {
   ): Promise<Category> {
     const category = await this.findOne(id);
 
-    Object.assign(category, updateCategoryDto);
+    // 更新名称（如果提供）
+    if (updateCategoryDto.name) {
+      category.name = updateCategoryDto.name;
+    }
+
+    // 设置更新时间：优先使用前端传的时间，没有的话使用当前时间
+    category.updatedAt =
+      DateUtil.parseDateTime(updateCategoryDto.updatedAt) || DateUtil.now();
 
     return await this.categoryRepository.save(category);
   }
@@ -106,14 +121,26 @@ export class CategoryService {
    * 增加分类文章数量
    */
   async incrementArticleCount(id: number): Promise<void> {
-    await this.categoryRepository.increment({ id }, 'articleCount', 1);
+    await this.categoryRepository.update(
+      { id },
+      {
+        articleCount: () => 'articleCount + 1',
+        updatedAt: DateUtil.now(),
+      },
+    );
   }
 
   /**
    * 减少分类文章数量
    */
   async decrementArticleCount(id: number): Promise<void> {
-    await this.categoryRepository.decrement({ id }, 'articleCount', 1);
+    await this.categoryRepository.update(
+      { id },
+      {
+        articleCount: () => 'articleCount - 1',
+        updatedAt: DateUtil.now(),
+      },
+    );
   }
 
   /**
