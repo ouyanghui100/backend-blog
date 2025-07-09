@@ -14,7 +14,6 @@ import { Article } from './article.entity';
  * 用于文章的标签化分类和检索
  */
 @Entity('tags')
-@Index(['slug'], { unique: true }) // slug 唯一索引
 @Index(['usageCount']) // 使用频率索引，用于热门标签查询
 export class Tag {
   @PrimaryGeneratedColumn()

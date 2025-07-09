@@ -31,7 +31,6 @@ export enum ArticleStatus {
  */
 @Entity('articles')
 @Index(['status', 'publishedAt']) // 为查询优化添加索引
-@Index(['slug'], { unique: true }) // slug 唯一索引
 export class Article {
   @PrimaryGeneratedColumn()
   id: number;

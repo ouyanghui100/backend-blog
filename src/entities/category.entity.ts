@@ -11,11 +11,10 @@ import { Article } from './article.entity';
 
 /**
  * 文章分类实体
- * 支持层级分类结构 (父分类 -> 子分类)
+ * 简化的分类结构
  */
 @Entity('categories')
-@Index(['slug'], { unique: true }) // slug 唯一索引
-@Index(['parentId', 'sort']) // 父分类和排序优化
+@Index(['sort']) // 排序优化
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
