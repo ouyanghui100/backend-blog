@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindManyOptions,
   FindOptionsWhere,
-  In,
   Like,
   MoreThanOrEqual,
   Repository,
@@ -86,15 +85,6 @@ export class TagService {
   }
 
   /**
-   * 获取所有标签
-   */
-  async getActiveTags(): Promise<Tag[]> {
-    return await this.tagRepository.find({
-      order: { name: 'ASC' },
-    });
-  }
-
-  /**
    * 更新标签
    */
   async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
@@ -111,18 +101,6 @@ export class TagService {
   async incrementUsage(id: number): Promise<void> {
     await this.tagRepository.increment({ id }, 'usageCount', 1);
     await this.tagRepository.update({ id }, { lastUsedAt: new Date() });
-  }
-
-  /**
-   * 批量增加标签使用次数
-   */
-  async incrementUsageByIds(ids: number[]): Promise<void> {
-    if (ids.length === 0) return;
-
-    await Promise.all([
-      this.tagRepository.increment({ id: In(ids) }, 'usageCount', 1),
-      this.tagRepository.update({ id: In(ids) }, { lastUsedAt: new Date() }),
-    ]);
   }
 
   /**
