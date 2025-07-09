@@ -7,10 +7,12 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
+import { Comment } from './comment.entity';
 import { Tag } from './tag.entity';
 import { User } from './user.entity';
 
@@ -79,6 +81,10 @@ export class Article {
     inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
   })
   tags: Tag[];
+
+  // === 评论关联 ===
+  @OneToMany(() => Comment, comment => comment.article)
+  comments: Comment[];
 
   // === 状态管理 ===
   @Column({
