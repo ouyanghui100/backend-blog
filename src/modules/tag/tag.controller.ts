@@ -9,8 +9,8 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -316,7 +316,7 @@ export class TagController {
     status: 404,
     description: '标签不存在',
   })
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTagDto: UpdateTagDto,

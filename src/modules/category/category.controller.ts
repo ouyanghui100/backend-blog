@@ -9,8 +9,8 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -347,7 +347,7 @@ export class CategoryController {
     status: 404,
     description: '分类不存在',
   })
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
