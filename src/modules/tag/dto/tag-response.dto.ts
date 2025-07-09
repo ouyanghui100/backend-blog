@@ -1,25 +1,27 @@
+import { BaseResponseDto } from '../../../common/dto/base-response.dto';
+import { DateUtil } from '../../../common/utils/date.util';
 import { Tag } from '../../../entities/tag.entity';
 
 /**
  * 标签响应 DTO
  */
-export class TagResponseDto {
+export class TagResponseDto extends BaseResponseDto {
   id: number;
   name: string;
   usageCount: number;
-  createdAt: Date;
-  updatedAt: Date;
-  lastUsedAt?: Date;
+  lastUsedAt: string | null;
   isPopular: boolean;
 
   constructor(tag: Tag) {
+    super();
     this.id = tag.id;
     this.name = tag.name;
     this.usageCount = tag.usageCount;
-    this.createdAt = tag.createdAt;
-    this.updatedAt = tag.updatedAt;
-    this.lastUsedAt = tag.lastUsedAt;
+    this.lastUsedAt = DateUtil.formatDateTime(tag.lastUsedAt);
     this.isPopular = tag.isPopular;
+
+    // 使用父类方法格式化基础时间字段
+    this.formatBaseTimeFields(tag);
   }
 }
 
@@ -39,30 +41,5 @@ export class PaginatedTagResponseDto {
     this.page = page;
     this.limit = limit;
     this.totalPages = Math.ceil(total / limit);
-  }
-}
-
-/**
- * API 统一响应格式
- */
-export class ApiResponseDto<T> {
-  success: boolean;
-  message: string;
-  data?: T;
-  error?: string;
-
-  constructor(success: boolean, message: string, data?: T, error?: string) {
-    this.success = success;
-    this.message = message;
-    this.data = data;
-    this.error = error;
-  }
-
-  static success<T>(data: T, message: string = '操作成功'): ApiResponseDto<T> {
-    return new ApiResponseDto(true, message, data);
-  }
-
-  static error<T>(message: string, error?: string): ApiResponseDto<T | null> {
-    return new ApiResponseDto<T | null>(false, message, null, error);
   }
 }
