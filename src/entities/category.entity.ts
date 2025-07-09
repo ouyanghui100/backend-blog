@@ -31,9 +31,6 @@ export class Category {
   @Column({ default: 0, comment: '排序权重 (数字越大越靠前)' })
   sort: number;
 
-  @Column({ default: true, comment: '是否启用' })
-  isActive: boolean;
-
   // === 统计信息 ===
   @Column({ default: 0, comment: '文章数量' })
   articleCount: number;

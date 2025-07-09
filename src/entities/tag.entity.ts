@@ -31,12 +31,6 @@ export class Tag {
   @Column({ default: 0, comment: '使用次数/关联文章数' })
   usageCount: number;
 
-  @Column({ default: true, comment: '是否启用' })
-  isActive: boolean;
-
-  @Column({ default: 0, comment: '排序权重 (数字越大越靠前)' })
-  sort: number;
-
   // === 时间字段 ===
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;

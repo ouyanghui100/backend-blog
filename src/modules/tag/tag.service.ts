@@ -1,0 +1,160 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  FindManyOptions,
+  FindOptionsWhere,
+  In,
+  Like,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
+import { Tag } from '../../entities/tag.entity';
+import { CreateTagDto, QueryTagDto, UpdateTagDto } from './dto';
+
+/**
+ * 标签服务层
+ * 负责标签的业务逻辑处理
+ */
+@Injectable()
+export class TagService {
+  constructor(
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
+  ) {}
+
+  /**
+   * 创建标签
+   */
+  async create(createTagDto: CreateTagDto): Promise<Tag> {
+    const tag = this.tagRepository.create(createTagDto);
+    return await this.tagRepository.save(tag);
+  }
+
+  /**
+   * 查询标签列表（支持搜索）
+   */
+  async findAll(queryDto: QueryTagDto): Promise<Tag[]> {
+    const { search } = queryDto;
+
+    // 构建查询条件
+    const where: FindOptionsWhere<Tag> = {};
+
+    if (search) {
+      where.name = Like(`%${search}%`);
+    }
+
+    // 构建查询选项
+    const options: FindManyOptions<Tag> = {
+      where,
+    };
+    return await this.tagRepository.find(options);
+  }
+
+  /**
+   * 根据ID查询标签
+   */
+  async findOne(id: number): Promise<Tag> {
+    const tag = await this.tagRepository.findOne({
+      where: { id },
+      relations: ['articles'],
+    });
+
+    if (!tag) {
+      throw new NotFoundException(`ID为 ${id} 的标签不存在`);
+    }
+
+    return tag;
+  }
+
+  /**
+   * 根据名称查询标签
+   */
+  async findByName(name: string): Promise<Tag | null> {
+    return await this.tagRepository.findOne({
+      where: { name },
+    });
+  }
+
+  /**
+   * 获取热门标签
+   */
+  async getPopularTags(limit: number = 10): Promise<Tag[]> {
+    return await this.tagRepository.find({
+      order: { usageCount: 'DESC' },
+      take: limit,
+    });
+  }
+
+  /**
+   * 获取所有标签
+   */
+  async getActiveTags(): Promise<Tag[]> {
+    return await this.tagRepository.find({
+      order: { name: 'ASC' },
+    });
+  }
+
+  /**
+   * 更新标签
+   */
+  async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
+    const tag = await this.findOne(id);
+
+    Object.assign(tag, updateTagDto);
+
+    return await this.tagRepository.save(tag);
+  }
+
+  /**
+   * 增加标签使用次数
+   */
+  async incrementUsage(id: number): Promise<void> {
+    await this.tagRepository.increment({ id }, 'usageCount', 1);
+    await this.tagRepository.update({ id }, { lastUsedAt: new Date() });
+  }
+
+  /**
+   * 批量增加标签使用次数
+   */
+  async incrementUsageByIds(ids: number[]): Promise<void> {
+    if (ids.length === 0) return;
+
+    await Promise.all([
+      this.tagRepository.increment({ id: In(ids) }, 'usageCount', 1),
+      this.tagRepository.update({ id: In(ids) }, { lastUsedAt: new Date() }),
+    ]);
+  }
+
+  /**
+   * 删除标签
+   */
+  async remove(id: number): Promise<void> {
+    const tag = await this.findOne(id);
+    await this.tagRepository.remove(tag);
+  }
+
+  /**
+   * 获取标签统计信息
+   */
+  async getStatistics(): Promise<{
+    total: number;
+    popular: number;
+    totalUsage: number;
+  }> {
+    const [total, popularTags] = await Promise.all([
+      this.tagRepository.count(),
+      this.tagRepository.find({ where: { usageCount: MoreThanOrEqual(5) } }),
+    ]);
+
+    const totalUsageResult = await this.tagRepository
+      .createQueryBuilder('tag')
+      .select('SUM(tag.usageCount)', 'sum')
+      .getRawOne();
+
+    return {
+      total,
+      popular: popularTags.length,
+      totalUsage: parseInt(String(totalUsageResult?.sum || '0'), 10),
+    };
+  }
+}
