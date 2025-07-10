@@ -228,10 +228,10 @@ export class TagController {
   })
   @Get('popular')
   async getPopular(
-    @Query('minUsage') minUsageQuery?: string,
+    @Query('minUsage') minUsageQuery?: number,
   ): Promise<ApiResponseDto<TagResponseDto[]>> {
     try {
-      const minUsage = minUsageQuery ? parseInt(minUsageQuery, 10) : 10;
+      const minUsage = minUsageQuery && minUsageQuery > 0 ? minUsageQuery : 10;
       const tags = await this.tagService.getPopularTags(minUsage);
       const result = tags.map(tag => new TagResponseDto(tag));
       return ApiResponseDto.success(

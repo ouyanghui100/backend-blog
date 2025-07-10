@@ -228,12 +228,11 @@ export class CategoryController {
   })
   @Get('popular')
   async getPopular(
-    @Query('minArticles') minArticlesQuery?: string,
+    @Query('minArticles') minArticlesQuery?: number,
   ): Promise<ApiResponseDto<CategoryResponseDto[]>> {
     try {
-      const minArticles = minArticlesQuery
-        ? parseInt(minArticlesQuery, 10)
-        : 10;
+      const minArticles =
+        minArticlesQuery && minArticlesQuery > 0 ? minArticlesQuery : 10;
       const categories =
         await this.categoryService.getPopularCategories(minArticles);
       const result = categories.map(
