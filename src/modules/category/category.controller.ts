@@ -32,6 +32,7 @@ import {
   CategoryResponseDto,
   CategoryStatisticsDto,
   CreateCategoryDto,
+  DeleteCategoryDto,
   QueryCategoryDto,
   UpdateCategoryDto,
 } from './dto';
@@ -420,11 +421,6 @@ export class CategoryController {
     summary: '更新分类',
     description: '根据分类ID更新分类信息',
   })
-  @ApiParam({
-    name: 'id',
-    description: '分类ID',
-    example: 1,
-  })
   @ApiBody({
     type: UpdateCategoryDto,
     description: '更新分类的请求体',
@@ -432,12 +428,14 @@ export class CategoryController {
       basic: {
         summary: '基本更新（使用默认时间）',
         value: {
+          id: 1,
           name: '全栈开发',
         },
       },
       withTime: {
         summary: '指定更新时间',
         value: {
+          id: 1,
           name: '全栈开发',
           updatedAt: '2024-01-16 10:20:30',
         },
@@ -492,24 +490,32 @@ export class CategoryController {
       },
     },
   })
-  @Patch(':id')
+  @Patch()
   async update(
-    @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<ApiResponseDto<CategoryResponseDto>> {
-    if (updateCategoryDto.name) {
+    const { id, ...updateData } = updateCategoryDto;
+
+    if (updateData.name) {
       const existingCategory = await this.categoryService.findByName(
-        updateCategoryDto.name,
+        updateData.name,
       );
       if (existingCategory && existingCategory.id !== id) {
-        return ApiResponseDto.conflict(
-          `分类 "${updateCategoryDto.name}" 已存在`,
-        );
+        return ApiResponseDto.conflict(`分类 "${updateData.name}" 已存在`);
       }
     }
 
     try {
-      const category = await this.categoryService.update(id, updateCategoryDto);
+      // 创建一个符合service期望的对象，不包含id
+      const updatePayload: Omit<UpdateCategoryDto, 'id'> = {
+        ...(updateData.name && { name: updateData.name }),
+        ...(updateData.updatedAt && { updatedAt: updateData.updatedAt }),
+      };
+
+      const category = await this.categoryService.update(
+        id,
+        updatePayload as UpdateCategoryDto,
+      );
       return ApiResponseDto.success(
         new CategoryResponseDto(category),
         '分类更新成功',
@@ -530,10 +536,17 @@ export class CategoryController {
     summary: '删除分类',
     description: '根据分类ID删除分类（只能删除没有文章的分类）',
   })
-  @ApiParam({
-    name: 'id',
-    description: '分类ID',
-    example: 1,
+  @ApiBody({
+    type: DeleteCategoryDto,
+    description: '删除分类的请求体',
+    examples: {
+      basic: {
+        summary: '删除分类',
+        value: {
+          id: 1,
+        },
+      },
+    },
   })
   @ApiResponse({
     status: StatusCodes.SUCCESS,
@@ -573,12 +586,12 @@ export class CategoryController {
       },
     },
   })
-  @Delete(':id')
+  @Delete()
   async remove(
-    @Param('id', ParseIntPipe) id: number,
+    @Body() deleteCategoryDto: DeleteCategoryDto,
   ): Promise<ApiResponseDto<null>> {
     try {
-      await this.categoryService.remove(id);
+      await this.categoryService.remove(deleteCategoryDto.id);
       return ApiResponseDto.success(null, '分类删除成功');
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {

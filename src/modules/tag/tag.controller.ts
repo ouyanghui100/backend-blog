@@ -28,6 +28,7 @@ import { StatusCodes } from '../../common/constants/status-codes';
 import {
   ApiResponseDto,
   CreateTagDto,
+  DeleteTagDto,
   QueryTagDto,
   TagResponseDto,
   UpdateTagDto,
@@ -382,11 +383,6 @@ export class TagController {
     summary: '更新标签',
     description: '根据标签ID更新标签信息',
   })
-  @ApiParam({
-    name: 'id',
-    description: '标签ID',
-    example: 1,
-  })
   @ApiBody({
     type: UpdateTagDto,
     description: '更新标签的请求体',
@@ -394,12 +390,14 @@ export class TagController {
       basic: {
         summary: '基本更新（使用默认时间）',
         value: {
+          id: 1,
           name: 'TypeScript',
         },
       },
       withTime: {
         summary: '指定更新时间',
         value: {
+          id: 1,
           name: 'TypeScript',
           updatedAt: '2024-01-16 10:20:30',
         },
@@ -464,22 +462,29 @@ export class TagController {
       },
     },
   })
-  @Patch(':id')
+  @Patch()
   async update(
-    @Param('id', ParseIntPipe) id: number,
     @Body() updateTagDto: UpdateTagDto,
   ): Promise<ApiResponseDto<TagResponseDto>> {
-    if (updateTagDto.name) {
-      const existingTag = await this.tagService.findByName(updateTagDto.name);
+    const { id, ...updateData } = updateTagDto;
+
+    if (updateData.name) {
+      const existingTag = await this.tagService.findByName(updateData.name);
       if (existingTag && existingTag.id !== id) {
         return ApiResponseDto.resourceExists(
-          `标签 "${updateTagDto.name}" 已存在`,
+          `标签 "${updateData.name}" 已存在`,
         );
       }
     }
 
     try {
-      const tag = await this.tagService.update(id, updateTagDto);
+      // 创建一个符合service期望的对象，不包含id
+      const updatePayload: Omit<UpdateTagDto, 'id'> = {
+        ...(updateData.name && { name: updateData.name }),
+        ...(updateData.updatedAt && { updatedAt: updateData.updatedAt }),
+      };
+
+      const tag = await this.tagService.update(id, updatePayload as UpdateTagDto);
       return ApiResponseDto.success(new TagResponseDto(tag), '标签更新成功');
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
@@ -497,10 +502,17 @@ export class TagController {
     summary: '删除标签',
     description: '根据标签ID删除标签',
   })
-  @ApiParam({
-    name: 'id',
-    description: '标签ID',
-    example: 1,
+  @ApiBody({
+    type: DeleteTagDto,
+    description: '删除标签的请求体',
+    examples: {
+      basic: {
+        summary: '删除标签',
+        value: {
+          id: 1,
+        },
+      },
+    },
   })
   @ApiResponse({
     status: StatusCodes.SUCCESS,
@@ -528,12 +540,12 @@ export class TagController {
       },
     },
   })
-  @Delete(':id')
+  @Delete()
   async remove(
-    @Param('id', ParseIntPipe) id: number,
+    @Body() deleteTagDto: DeleteTagDto,
   ): Promise<ApiResponseDto<null>> {
     try {
-      await this.tagService.remove(id);
+      await this.tagService.remove(deleteTagDto.id);
       return ApiResponseDto.success(null, '标签删除成功');
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {

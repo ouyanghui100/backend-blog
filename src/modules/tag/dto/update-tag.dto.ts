@@ -1,11 +1,26 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsString, Length } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 /**
  * 更新标签 DTO
  * 注意：更新时不能修改创建时间
  */
 export class UpdateTagDto {
+  @ApiProperty({
+    description: '标签ID',
+    example: 1,
+  })
+  @IsNotEmpty({ message: '标签ID不能为空' })
+  @IsNumber({}, { message: '标签ID必须是数字' })
+  id: number;
+
   @ApiPropertyOptional({
     description: '标签名称',
     example: 'JavaScript',

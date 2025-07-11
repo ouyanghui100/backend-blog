@@ -5,6 +5,7 @@
 export { CategoryResponseDto } from './category-response.dto';
 export * from './category-statistics.dto';
 export { CreateCategoryDto } from './create-category.dto';
+export { DeleteCategoryDto } from './delete-category.dto';
 export { QueryCategoryDto } from './query-category.dto';
 export { UpdateCategoryDto } from './update-category.dto';
 
