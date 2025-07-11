@@ -106,12 +106,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '分类创建成功',
     type: ApiResponseDto<CategoryResponseDto>,
     schema: {
       example: {
-        code: 200,
+        code: 201,
         message: '分类创建成功',
         data: {
           id: 1,
@@ -125,11 +125,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 409,
     description: '分类名称已存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 303,
+        code: 409,
         message: '分类 "前端开发" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -137,6 +138,7 @@ export class CategoryController {
     },
   })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<ApiResponseDto<CategoryResponseDto>> {
@@ -144,13 +146,11 @@ export class CategoryController {
       createCategoryDto.name,
     );
     if (existingCategory) {
-      return ApiResponseDto.resourceExists(
-        `分类 "${createCategoryDto.name}" 已存在`,
-      );
+      return ApiResponseDto.conflict(`分类 "${createCategoryDto.name}" 已存在`);
     }
 
     const category = await this.categoryService.create(createCategoryDto);
-    return ApiResponseDto.success(
+    return ApiResponseDto.created(
       new CategoryResponseDto(category),
       '分类创建成功',
     );
@@ -186,6 +186,19 @@ export class CategoryController {
             updatedAt: '2024-01-15 18:30:45',
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取分类列表失败：数据库连接错误',
+        data: null,
         timestamp: '2024-01-15 18:30:45',
       },
     },
@@ -236,6 +249,19 @@ export class CategoryController {
             updatedAt: '2024-01-15 18:30:45',
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取热门分类失败：数据库查询错误',
+        data: null,
         timestamp: '2024-01-15 18:30:45',
       },
     },
@@ -322,6 +348,32 @@ export class CategoryController {
       },
     },
   })
+  @ApiResponse({
+    status: 404,
+    description: '分类不存在',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 404,
+        message: 'ID为 1 的分类不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取分类详情失败：数据库查询错误',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -334,7 +386,7 @@ export class CategoryController {
       );
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        return ApiResponseDto.resourceNotFound(error.message);
+        return ApiResponseDto.notFound(error.message);
       }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`获取分类详情失败：${errorMessage}`);
@@ -392,11 +444,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 303,
+    status: 409,
     description: '分类名称已存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 303,
+        code: 409,
         message: '分类 "全栈开发" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -404,11 +457,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 302,
+    status: 404,
     description: '分类不存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 302,
+        code: 404,
         message: 'ID为 1 的分类不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -425,7 +479,7 @@ export class CategoryController {
         updateCategoryDto.name,
       );
       if (existingCategory && existingCategory.id !== id) {
-        return ApiResponseDto.resourceExists(
+        return ApiResponseDto.conflict(
           `分类 "${updateCategoryDto.name}" 已存在`,
         );
       }
@@ -439,7 +493,7 @@ export class CategoryController {
       );
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        return ApiResponseDto.resourceNotFound(error.message);
+        return ApiResponseDto.notFound(error.message);
       }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`更新分类失败：${errorMessage}`);
@@ -461,6 +515,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '分类删除成功',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 200,
@@ -471,11 +526,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 304,
+    status: 403,
     description: '分类下还有文章，无法删除',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 304,
+        code: 403,
         message: '分类下还有文章，无法删除',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -483,11 +539,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 302,
+    status: 404,
     description: '分类不存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 302,
+        code: 404,
         message: 'ID为 1 的分类不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -504,7 +561,7 @@ export class CategoryController {
       return ApiResponseDto.success(null, '分类删除成功');
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        return ApiResponseDto.resourceNotFound(error.message);
+        return ApiResponseDto.notFound(error.message);
       }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`删除分类失败：${errorMessage}`);

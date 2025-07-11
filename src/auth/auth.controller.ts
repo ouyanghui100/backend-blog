@@ -76,11 +76,12 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 301,
+    status: 400,
     description: '用户名或密码错误',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 301,
+        code: 400,
         message: '用户名或密码错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -100,7 +101,7 @@ export class AuthController {
       return ApiResponseDto.success(result, '登录成功');
     } catch (error: unknown) {
       if (error instanceof UnauthorizedException) {
-        return ApiResponseDto.validationFailed('用户名或密码错误');
+        return ApiResponseDto.badRequest('用户名或密码错误');
       }
       return ApiResponseDto.internalError('登录失败');
     }
@@ -166,11 +167,12 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 301,
+    status: 400,
     description: '用户信息不完整',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
-        code: 301,
+        code: 400,
         message: '用户信息不完整',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -194,7 +196,7 @@ export class AuthController {
   getProfile(@Request() req): ApiResponseDto<UserResponseDto> {
     const { userId, username, role } = req.user;
     if (!userId || !username || !role) {
-      return ApiResponseDto.validationFailed('用户信息不完整');
+      return ApiResponseDto.badRequest('用户信息不完整');
     }
     return ApiResponseDto.success(
       {

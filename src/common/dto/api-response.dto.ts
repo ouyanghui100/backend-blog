@@ -46,7 +46,7 @@ export class ApiResponseDto<T = unknown> {
     this.code = options.code;
     this.message = options.message;
     this.data = options.data;
-    this.httpStatus = options.httpStatus;
+    this.httpStatus = options.httpStatus ?? options.code; // 默认HTTP状态码等于业务状态码
     this.timestamp = new Date()
       .toISOString()
       .replace('T', ' ')
@@ -61,152 +61,106 @@ export class ApiResponseDto<T = unknown> {
       code: StatusCodes.SUCCESS,
       message,
       data,
-      httpStatus: 200,
     });
   }
 
   /**
-   * 创建失败响应（通用，HTTP 200）
+   * 创建资源成功响应 (HTTP 201)
    */
-  static error<T = null>(
-    message = '操作失败',
-    code: StatusCode = StatusCodes.INTERNAL_ERROR,
+  static created<T>(data: T, message = '创建成功'): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.CREATED,
+      message,
+      data,
+    });
+  }
+
+  /**
+   * 创建请求错误响应 (HTTP 400)
+   */
+  static badRequest<T = null>(
+    message = '请求参数错误',
     data: T = null as T,
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
-      code,
+      code: StatusCodes.BAD_REQUEST,
       message,
       data,
-      httpStatus: 200,
-    });
-  }
-
-  // =================== 业务层错误 (HTTP 200，业务code 300-400) ===================
-
-  /**
-   * 创建通用业务错误响应 (HTTP 200, code 300)
-   */
-  static businessError<T = null>(
-    message = '业务处理失败',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.BUSINESS_ERROR,
-      message,
-      data,
-      httpStatus: 200,
     });
   }
 
   /**
-   * 创建数据验证失败响应 (HTTP 200, code 301)
+   * 创建未授权响应 (HTTP 401)
    */
-  static validationFailed<T = null>(
-    message = '数据验证失败',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.VALIDATION_FAILED,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  /**
-   * 创建资源不存在响应 (HTTP 200, code 302)
-   */
-  static resourceNotFound<T = null>(
-    message = '资源不存在',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.RESOURCE_NOT_FOUND,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  /**
-   * 创建资源已存在响应 (HTTP 200, code 303)
-   */
-  static resourceExists<T = null>(
-    message = '资源已存在',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.RESOURCE_ALREADY_EXISTS,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  /**
-   * 创建操作被禁止响应 (HTTP 200, code 304)
-   */
-  static operationForbidden<T = null>(
-    message = '操作被禁止',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.OPERATION_FORBIDDEN,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  /**
-   * 创建参数无效响应 (HTTP 200, code 305)
-   */
-  static parameterInvalid<T = null>(
-    message = '参数无效',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.PARAMETER_INVALID,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  // =================== HTTP层面错误 (HTTP状态码与code一致) ===================
-
-  /**
-   * 创建登录状态失效响应 (HTTP 401, code 401)
-   */
-  static loginExpired<T = null>(
+  static unauthorized<T = null>(
     message = '登录状态已失效，请重新登录',
     data: T = null as T,
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
-      code: StatusCodes.LOGIN_EXPIRED,
+      code: StatusCodes.UNAUTHORIZED,
       message,
       data,
-      httpStatus: 401,
     });
   }
 
   /**
-   * 创建请求超时响应 (HTTP 408, code 408)
+   * 创建禁止访问响应 (HTTP 403)
    */
-  static requestTimeout<T = null>(
-    message = '请求超时',
+  static forbidden<T = null>(
+    message = '操作被禁止',
     data: T = null as T,
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
-      code: StatusCodes.REQUEST_TIMEOUT,
+      code: StatusCodes.FORBIDDEN,
       message,
       data,
-      httpStatus: 408,
     });
   }
 
   /**
-   * 创建服务器内部错误响应 (HTTP 500, code 500)
+   * 创建资源不存在响应 (HTTP 404)
+   */
+  static notFound<T = null>(
+    message = '资源不存在',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.NOT_FOUND,
+      message,
+      data,
+    });
+  }
+
+  /**
+   * 创建资源冲突响应 (HTTP 409)
+   */
+  static conflict<T = null>(
+    message = '资源已存在',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.CONFLICT,
+      message,
+      data,
+    });
+  }
+
+  /**
+   * 创建请求实体错误响应 (HTTP 422)
+   */
+  static unprocessableEntity<T = null>(
+    message = '请求格式正确但语义错误',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.UNPROCESSABLE_ENTITY,
+      message,
+      data,
+    });
+  }
+
+  /**
+   * 创建服务器内部错误响应 (HTTP 500)
    */
   static internalError<T = null>(
     message = '服务器内部错误',
@@ -216,22 +170,82 @@ export class ApiResponseDto<T = unknown> {
       code: StatusCodes.INTERNAL_ERROR,
       message,
       data,
-      httpStatus: 500,
     });
   }
 
   /**
-   * 创建业务繁忙响应 (HTTP 503, code 503)
+   * 创建服务不可用响应 (HTTP 503)
+   */
+  static serviceUnavailable<T = null>(
+    message = '服务暂时不可用，请稍后重试',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.SERVICE_UNAVAILABLE,
+      message,
+      data,
+    });
+  }
+
+  // =================== 兼容旧方法名 ===================
+
+  /**
+   * @deprecated 使用 badRequest 替代
+   */
+  static validationFailed<T = null>(
+    message = '数据验证失败',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return ApiResponseDto.badRequest(message, data);
+  }
+
+  /**
+   * @deprecated 使用 notFound 替代
+   */
+  static resourceNotFound<T = null>(
+    message = '资源不存在',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return ApiResponseDto.notFound(message, data);
+  }
+
+  /**
+   * @deprecated 使用 conflict 替代
+   */
+  static resourceExists<T = null>(
+    message = '资源已存在',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return ApiResponseDto.conflict(message, data);
+  }
+
+  /**
+   * @deprecated 使用 forbidden 替代
+   */
+  static operationForbidden<T = null>(
+    message = '操作被禁止',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return ApiResponseDto.forbidden(message, data);
+  }
+
+  /**
+   * @deprecated 使用 unauthorized 替代
+   */
+  static loginExpired<T = null>(
+    message = '登录状态已失效，请重新登录',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return ApiResponseDto.unauthorized(message, data);
+  }
+
+  /**
+   * @deprecated 使用 serviceUnavailable 替代
    */
   static serviceBusy<T = null>(
     message = '业务繁忙，请稍后重试',
     data: T = null as T,
   ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.SERVICE_BUSY,
-      message,
-      data,
-      httpStatus: 503,
-    });
+    return ApiResponseDto.serviceUnavailable(message, data);
   }
 }

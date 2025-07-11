@@ -60,7 +60,7 @@ export class TagController {
     description: '创建一个新的标签',
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '标签创建成功',
     type: ApiResponseDto<TagResponseDto>,
     schema: {
@@ -100,8 +100,9 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 303,
+    status: 409,
     description: '标签名称已存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 303,
@@ -112,6 +113,7 @@ export class TagController {
     },
   })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createTagDto: CreateTagDto,
   ): Promise<ApiResponseDto<TagResponseDto>> {
@@ -158,6 +160,19 @@ export class TagController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取标签列表失败：数据库连接错误',
+        data: null,
         timestamp: '2024-01-15 18:30:45',
       },
     },
@@ -209,6 +224,19 @@ export class TagController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取热门标签失败：数据库查询错误',
+        data: null,
         timestamp: '2024-01-15 18:30:45',
       },
     },
@@ -265,12 +293,26 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 302,
+    status: 404,
     description: '标签不存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 302,
         message: 'ID为 1 的标签不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '服务器内部错误',
+    type: ApiResponseDto<null>,
+    schema: {
+      example: {
+        code: 500,
+        message: '获取标签详情失败：数据库查询错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
       },
@@ -348,8 +390,9 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 303,
+    status: 409,
     description: '标签名称已存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 303,
@@ -360,8 +403,9 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 302,
+    status: 404,
     description: '标签不存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 302,
@@ -412,6 +456,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '标签删除成功',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 200,
@@ -422,8 +467,9 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 302,
+    status: 404,
     description: '标签不存在',
+    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 302,
