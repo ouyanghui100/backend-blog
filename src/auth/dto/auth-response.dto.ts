@@ -41,3 +41,21 @@ export class AuthResponseDto {
   })
   user: UserResponseDto;
 }
+
+/**
+ * 认证状态检查响应 DTO
+ */
+export class AuthCheckResponseDto {
+  @ApiProperty({
+    description: '令牌是否有效',
+    example: true,
+  })
+  valid: boolean;
+
+  @ApiProperty({
+    description: '用户角色',
+    enum: UserRole,
+    example: UserRole.ADMIN,
+  })
+  role: UserRole;
+}

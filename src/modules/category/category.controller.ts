@@ -31,6 +31,7 @@ import { CategoryService } from './category.service';
 import {
   ApiResponseDto,
   CategoryResponseDto,
+  CategoryStatisticsDto,
   CreateCategoryDto,
   QueryCategoryDto,
   UpdateCategoryDto,
@@ -85,24 +86,6 @@ export class CategoryController {
     summary: '创建分类',
     description: '创建一个新的分类',
   })
-  @ApiResponse({
-    status: 201,
-    description: '分类创建成功',
-    schema: {
-      example: {
-        code: 200,
-        message: '分类创建成功',
-        data: {
-          id: 1,
-          name: '前端开发',
-          articleCount: 0,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: null, // 创建时为null
-        },
-        timestamp: '2024-01-15 18:30:45',
-      },
-    },
-  })
   @ApiBody({
     type: CreateCategoryDto,
     description: '创建分类的请求体',
@@ -124,6 +107,25 @@ export class CategoryController {
   })
   @ApiResponse({
     status: 200,
+    description: '分类创建成功',
+    type: ApiResponseDto<CategoryResponseDto>,
+    schema: {
+      example: {
+        code: 200,
+        message: '分类创建成功',
+        data: {
+          id: 1,
+          name: '前端开发',
+          articleCount: 0,
+          createdAt: '2024-01-15 18:30:45',
+          updatedAt: null, // 创建时为null
+        },
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
     description: '分类名称已存在',
     schema: {
       example: {
@@ -135,7 +137,6 @@ export class CategoryController {
     },
   })
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<ApiResponseDto<CategoryResponseDto>> {
@@ -171,6 +172,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '获取分类列表成功',
+    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -220,6 +222,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '获取热门分类成功',
+    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -269,6 +272,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '获取分类统计成功',
+    type: ApiResponseDto<CategoryStatisticsDto>,
     schema: {
       example: {
         code: 200,
@@ -282,12 +286,7 @@ export class CategoryController {
     },
   })
   @Get('statistics')
-  async getStatistics(): Promise<
-    ApiResponseDto<{
-      total: number;
-      totalArticles: number;
-    }>
-  > {
+  async getStatistics(): Promise<ApiResponseDto<CategoryStatisticsDto>> {
     const statistics = await this.categoryService.getStatistics();
     return ApiResponseDto.success(statistics, '获取分类统计成功');
   }
@@ -307,6 +306,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '获取分类详情成功',
+    type: ApiResponseDto<CategoryResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -375,6 +375,7 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '分类更新成功',
+    type: ApiResponseDto<CategoryResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -391,7 +392,7 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 303,
     description: '分类名称已存在',
     schema: {
       example: {
@@ -403,7 +404,7 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 302,
     description: '分类不存在',
     schema: {
       example: {
@@ -470,7 +471,7 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 304,
     description: '分类下还有文章，无法删除',
     schema: {
       example: {
@@ -482,7 +483,7 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 302,
     description: '分类不存在',
     schema: {
       example: {

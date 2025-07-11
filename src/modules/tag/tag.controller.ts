@@ -53,32 +53,6 @@ export class TagController {
   ) {}
 
   /**
-   * 重置标签数据（开发环境使用）
-   * 会删除所有现有标签并重新创建默认标签
-   */
-  // @ApiOperation({
-  //   summary: '重置标签数据',
-  //   description: '删除所有现有标签并重新创建默认标签（开发环境使用）',
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: '重置成功',
-  //   schema: {
-  //     example: {
-  //       code: 200,
-  //       message: '标签数据重置成功',
-  //       data: null,
-  //     },
-  //   },
-  // })
-  // @Post('reset')
-  // @HttpCode(HttpStatus.OK)
-  // async resetTags(): Promise<ApiResponseDto<null>> {
-  //   await this.tagSeedService.resetTags();
-  //   return ApiResponseDto.success(null, '标签数据重置成功');
-  // }
-
-  /**
    * 创建标签
    */
   @ApiOperation({
@@ -86,8 +60,9 @@ export class TagController {
     description: '创建一个新的标签',
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '标签创建成功',
+    type: ApiResponseDto<TagResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -125,7 +100,7 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 303,
     description: '标签名称已存在',
     schema: {
       example: {
@@ -137,7 +112,6 @@ export class TagController {
     },
   })
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createTagDto: CreateTagDto,
   ): Promise<ApiResponseDto<TagResponseDto>> {
@@ -168,6 +142,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '获取标签列表成功',
+    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -218,6 +193,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '获取热门标签成功',
+    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -270,6 +246,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '获取标签详情成功',
+    type: ApiResponseDto<TagResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -288,7 +265,7 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 302,
     description: '标签不存在',
     schema: {
       example: {
@@ -352,6 +329,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '标签更新成功',
+    type: ApiResponseDto<TagResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -370,7 +348,7 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 303,
     description: '标签名称已存在',
     schema: {
       example: {
@@ -382,7 +360,7 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 302,
     description: '标签不存在',
     schema: {
       example: {
@@ -444,7 +422,7 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 302,
     description: '标签不存在',
     schema: {
       example: {

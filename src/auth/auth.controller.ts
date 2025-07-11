@@ -18,7 +18,11 @@ import {
 } from '@nestjs/swagger';
 import { ApiResponseDto } from '../common/dto/api-response.dto';
 import { AuthService } from './auth.service';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import {
+  AuthCheckResponseDto,
+  AuthResponseDto,
+  UserResponseDto,
+} from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -54,6 +58,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '登录成功',
+    type: ApiResponseDto<AuthResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -71,7 +76,7 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 301,
     description: '用户名或密码错误',
     schema: {
       example: {
@@ -111,6 +116,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '游客访问令牌生成成功',
+    type: ApiResponseDto<AuthResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -145,6 +151,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '获取用户信息成功',
+    type: ApiResponseDto<UserResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -159,7 +166,7 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 301,
     description: '用户信息不完整',
     schema: {
       example: {
@@ -184,9 +191,7 @@ export class AuthController {
   })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(
-    @Request() req,
-  ): ApiResponseDto<{ id: number; username: string; role: string }> {
+  getProfile(@Request() req): ApiResponseDto<UserResponseDto> {
     const { userId, username, role } = req.user;
     if (!userId || !username || !role) {
       return ApiResponseDto.validationFailed('用户信息不完整');
@@ -212,6 +217,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '令牌有效',
+    type: ApiResponseDto<AuthCheckResponseDto>,
     schema: {
       example: {
         code: 200,
@@ -238,7 +244,7 @@ export class AuthController {
   })
   @UseGuards(JwtAuthGuard)
   @Get('check')
-  checkAuth(@Request() req): ApiResponseDto<{ valid: boolean; role: string }> {
+  checkAuth(@Request() req): ApiResponseDto<AuthCheckResponseDto> {
     return ApiResponseDto.success(
       {
         valid: true,

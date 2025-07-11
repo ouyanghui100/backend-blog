@@ -36,6 +36,7 @@ export class FrontendController {
   @ApiResponse({
     status: 200,
     description: '获取标签列表成功',
+    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -51,6 +52,7 @@ export class FrontendController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -80,6 +82,7 @@ export class FrontendController {
   @ApiResponse({
     status: 200,
     description: '获取热门标签成功',
+    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -95,6 +98,7 @@ export class FrontendController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -124,6 +128,23 @@ export class FrontendController {
   @ApiResponse({
     status: 200,
     description: '获取分类列表成功',
+    type: ApiResponseDto<CategoryResponseDto[]>,
+    schema: {
+      example: {
+        code: 200,
+        message: '获取分类列表成功',
+        data: [
+          {
+            id: 1,
+            name: '前端开发',
+            articleCount: 15,
+            createdAt: '2024-01-15 18:30:45',
+            updatedAt: '2024-01-16 10:20:30',
+          },
+        ],
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Get('categories')
   async getCategories(
@@ -153,6 +174,7 @@ export class FrontendController {
   @ApiResponse({
     status: 200,
     description: '获取热门分类成功',
+    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
       example: {
         code: 200,
@@ -161,14 +183,12 @@ export class FrontendController {
           {
             id: 1,
             name: '前端开发',
-            description: '前端技术相关文章',
             articleCount: 15,
             createdAt: '2024-01-15 18:30:45',
             updatedAt: '2024-01-16 10:20:30',
-            lastUsedAt: '2024-01-16 10:20:30',
-            isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
