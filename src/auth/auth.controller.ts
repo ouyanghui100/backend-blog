@@ -78,7 +78,6 @@ export class AuthController {
   @ApiResponse({
     status: 400,
     description: '用户名或密码错误',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 400,
@@ -169,7 +168,6 @@ export class AuthController {
   @ApiResponse({
     status: 400,
     description: '用户信息不完整',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 400,

@@ -102,7 +102,6 @@ export class TagController {
   @ApiResponse({
     status: 409,
     description: '标签名称已存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 303,
@@ -167,7 +166,6 @@ export class TagController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 500,
@@ -231,7 +229,6 @@ export class TagController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 500,
@@ -295,7 +292,6 @@ export class TagController {
   @ApiResponse({
     status: 404,
     description: '标签不存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 302,
@@ -308,7 +304,6 @@ export class TagController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 500,
@@ -392,7 +387,6 @@ export class TagController {
   @ApiResponse({
     status: 409,
     description: '标签名称已存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 303,
@@ -405,7 +399,6 @@ export class TagController {
   @ApiResponse({
     status: 404,
     description: '标签不存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 302,
@@ -456,7 +449,6 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: '标签删除成功',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 200,
@@ -469,7 +461,7 @@ export class TagController {
   @ApiResponse({
     status: 404,
     description: '标签不存在',
-    type: ApiResponseDto<null>,
+
     schema: {
       example: {
         code: 302,

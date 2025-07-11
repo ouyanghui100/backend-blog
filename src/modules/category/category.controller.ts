@@ -127,7 +127,7 @@ export class CategoryController {
   @ApiResponse({
     status: 409,
     description: '分类名称已存在',
-    type: ApiResponseDto<null>,
+
     schema: {
       example: {
         code: 409,
@@ -193,7 +193,7 @@ export class CategoryController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
+
     schema: {
       example: {
         code: 500,
@@ -256,7 +256,7 @@ export class CategoryController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
+
     schema: {
       example: {
         code: 500,
@@ -351,7 +351,6 @@ export class CategoryController {
   @ApiResponse({
     status: 404,
     description: '分类不存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 404,
@@ -364,7 +363,6 @@ export class CategoryController {
   @ApiResponse({
     status: 500,
     description: '服务器内部错误',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 500,
@@ -446,7 +444,6 @@ export class CategoryController {
   @ApiResponse({
     status: 409,
     description: '分类名称已存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 409,
@@ -459,7 +456,6 @@ export class CategoryController {
   @ApiResponse({
     status: 404,
     description: '分类不存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 404,
@@ -515,7 +511,6 @@ export class CategoryController {
   @ApiResponse({
     status: 200,
     description: '分类删除成功',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 200,
@@ -528,7 +523,6 @@ export class CategoryController {
   @ApiResponse({
     status: 403,
     description: '分类下还有文章，无法删除',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 403,
@@ -541,7 +535,6 @@ export class CategoryController {
   @ApiResponse({
     status: 404,
     description: '分类不存在',
-    type: ApiResponseDto<null>,
     schema: {
       example: {
         code: 404,
