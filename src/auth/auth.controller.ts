@@ -59,11 +59,13 @@ export class AuthController {
     description: '登录成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '登录成功' },
         data: {
           type: 'object',
+          required: ['accessToken', 'user'],
           properties: {
             accessToken: {
               type: 'string',
@@ -71,6 +73,7 @@ export class AuthController {
             },
             user: {
               type: 'object',
+              required: ['id', 'username', 'role'],
               properties: {
                 id: { type: 'number', example: 1 },
                 username: { type: 'string', example: 'admin' },
@@ -125,11 +128,13 @@ export class AuthController {
     description: '游客访问令牌生成成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '游客访问令牌生成成功' },
         data: {
           type: 'object',
+          required: ['accessToken', 'user'],
           properties: {
             accessToken: {
               type: 'string',
@@ -137,6 +142,7 @@ export class AuthController {
             },
             user: {
               type: 'object',
+              required: ['id', 'username', 'role'],
               properties: {
                 id: { type: 'number', example: 2 },
                 username: { type: 'string', example: 'guest' },
@@ -168,11 +174,13 @@ export class AuthController {
     description: '获取用户信息成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取用户信息成功' },
         data: {
           type: 'object',
+          required: ['id', 'username', 'role'],
           properties: {
             id: { type: 'number', example: 1 },
             username: { type: 'string', example: 'admin' },
@@ -237,11 +245,13 @@ export class AuthController {
     description: '令牌有效',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '令牌有效' },
         data: {
           type: 'object',
+          required: ['valid', 'role'],
           properties: {
             valid: { type: 'boolean', example: true },
             role: { type: 'string', example: 'admin' },

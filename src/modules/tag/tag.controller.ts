@@ -63,11 +63,13 @@ export class TagController {
     description: '标签创建成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '标签创建成功' },
         data: {
           type: 'object',
+          required: ['id', 'name', 'usageCount', 'createdAt', 'isPopular'],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'JavaScript' },
@@ -146,6 +148,7 @@ export class TagController {
     description: '获取标签列表成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取标签列表成功' },
@@ -153,6 +156,15 @@ export class TagController {
           type: 'array',
           items: {
             type: 'object',
+            required: [
+              'id',
+              'name',
+              'usageCount',
+              'createdAt',
+              'updatedAt',
+              'lastUsedAt',
+              'isPopular',
+            ],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: 'JavaScript' },
@@ -220,6 +232,15 @@ export class TagController {
           type: 'array',
           items: {
             type: 'object',
+            required: [
+              'id',
+              'name',
+              'usageCount',
+              'createdAt',
+              'updatedAt',
+              'lastUsedAt',
+              'isPopular',
+            ],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: 'JavaScript' },
@@ -282,11 +303,21 @@ export class TagController {
     description: '获取标签详情成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取标签详情成功' },
         data: {
           type: 'object',
+          required: [
+            'id',
+            'name',
+            'usageCount',
+            'createdAt',
+            'updatedAt',
+            'lastUsedAt',
+            'isPopular',
+          ],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'JavaScript' },
@@ -380,11 +411,21 @@ export class TagController {
     description: '标签更新成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '标签更新成功' },
         data: {
           type: 'object',
+          required: [
+            'id',
+            'name',
+            'usageCount',
+            'createdAt',
+            'updatedAt',
+            'lastUsedAt',
+            'isPopular',
+          ],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'JavaScript' },
@@ -466,6 +507,7 @@ export class TagController {
     description: '标签删除成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '标签删除成功' },

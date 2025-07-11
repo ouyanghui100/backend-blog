@@ -39,6 +39,7 @@ export class FrontendController {
     description: '获取标签列表成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取标签列表成功' },
@@ -46,6 +47,15 @@ export class FrontendController {
           type: 'array',
           items: {
             type: 'object',
+            required: [
+              'id',
+              'name',
+              'usageCount',
+              'createdAt',
+              'updatedAt',
+              'lastUsedAt',
+              'isPopular',
+            ],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: 'JavaScript' },
@@ -89,6 +99,7 @@ export class FrontendController {
     description: '获取热门标签成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取热门标签成功' },
@@ -96,6 +107,15 @@ export class FrontendController {
           type: 'array',
           items: {
             type: 'object',
+            required: [
+              'id',
+              'name',
+              'usageCount',
+              'createdAt',
+              'updatedAt',
+              'lastUsedAt',
+              'isPopular',
+            ],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: 'JavaScript' },
@@ -139,6 +159,7 @@ export class FrontendController {
     description: '获取分类列表成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取分类列表成功' },
@@ -146,6 +167,7 @@ export class FrontendController {
           type: 'array',
           items: {
             type: 'object',
+            required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: '前端开发' },
@@ -189,6 +211,7 @@ export class FrontendController {
     description: '获取热门分类成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取热门分类成功' },
@@ -196,6 +219,7 @@ export class FrontendController {
           type: 'array',
           items: {
             type: 'object',
+            required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: '前端开发' },

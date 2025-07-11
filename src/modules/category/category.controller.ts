@@ -109,11 +109,13 @@ export class CategoryController {
     description: '分类创建成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '分类创建成功' },
         data: {
           type: 'object',
+          required: ['id', 'name', 'articleCount', 'createdAt'],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: '前端开发' },
@@ -174,6 +176,7 @@ export class CategoryController {
     description: '获取分类列表成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取分类列表成功' },
@@ -181,6 +184,7 @@ export class CategoryController {
           type: 'array',
           items: {
             type: 'object',
+            required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: '前端开发' },
@@ -240,6 +244,7 @@ export class CategoryController {
     description: '获取热门分类成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取热门分类成功' },
@@ -247,6 +252,7 @@ export class CategoryController {
           type: 'array',
           items: {
             type: 'object',
+            required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
             properties: {
               id: { type: 'number', example: 1 },
               name: { type: 'string', example: '前端开发' },
@@ -306,11 +312,13 @@ export class CategoryController {
     description: '获取分类统计成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取分类统计成功' },
         data: {
           type: 'object',
+          required: ['total', 'totalArticles'],
           properties: {
             total: { type: 'number', example: 10 },
             totalArticles: { type: 'number', example: 25 },
@@ -343,11 +351,13 @@ export class CategoryController {
     description: '获取分类详情成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '获取分类详情成功' },
         data: {
           type: 'object',
+          required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: '前端开发' },
@@ -439,11 +449,13 @@ export class CategoryController {
     description: '分类更新成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '分类更新成功' },
         data: {
           type: 'object',
+          required: ['id', 'name', 'articleCount', 'createdAt', 'updatedAt'],
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: '前端开发' },
@@ -528,6 +540,7 @@ export class CategoryController {
     description: '分类删除成功',
     schema: {
       type: 'object',
+      required: ['code', 'message', 'data', 'timestamp'],
       properties: {
         code: { type: 'number', example: StatusCodes.SUCCESS },
         message: { type: 'string', example: '分类删除成功' },
