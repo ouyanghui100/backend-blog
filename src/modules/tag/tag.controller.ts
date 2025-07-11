@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -26,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { MethodGuard } from '../../auth/guards/method.guard';
+import { StatusCodes } from '../../common/constants/status-codes';
 import {
   ApiResponseDto,
   CreateTagDto,
@@ -60,23 +59,26 @@ export class TagController {
     description: '创建一个新的标签',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '标签创建成功',
-    type: ApiResponseDto<TagResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '标签创建成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '标签创建成功' },
         data: {
-          id: 1,
-          name: 'JavaScript',
-          usageCount: 0,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: null, // 创建时为null
-          lastUsedAt: null,
-          isPopular: false,
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'JavaScript' },
+            usageCount: { type: 'number', example: 0 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', nullable: true, example: null },
+            lastUsedAt: { type: 'string', nullable: true, example: null },
+            isPopular: { type: 'boolean', example: false },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
@@ -100,11 +102,11 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 409,
+    status: StatusCodes.CONFLICT,
     description: '标签名称已存在',
     schema: {
       example: {
-        code: 303,
+        code: StatusCodes.CONFLICT,
         message: '标签 "JavaScript" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -140,34 +142,38 @@ export class TagController {
     example: 'JavaScript',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取标签列表成功',
-    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取标签列表成功',
-        data: [
-          {
-            id: 1,
-            name: 'JavaScript',
-            usageCount: 5,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-15 18:30:45',
-            lastUsedAt: '2024-01-16 10:20:30',
-            isPopular: true,
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取标签列表成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'JavaScript' },
+              usageCount: { type: 'number', example: 5 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              isPopular: { type: 'boolean', example: true },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取标签列表失败：数据库连接错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -203,34 +209,38 @@ export class TagController {
     example: 10,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取热门标签成功',
-    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取热门标签成功',
-        data: [
-          {
-            id: 1,
-            name: 'JavaScript',
-            usageCount: 15,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-15 18:30:45',
-            lastUsedAt: '2024-01-16 10:20:30',
-            isPopular: true,
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取热门标签成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'JavaScript' },
+              usageCount: { type: 'number', example: 15 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              isPopular: { type: 'boolean', example: true },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取热门标签失败：数据库查询错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -268,32 +278,35 @@ export class TagController {
     example: 1,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取标签详情成功',
-    type: ApiResponseDto<TagResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取标签详情成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取标签详情成功' },
         data: {
-          id: 1,
-          name: 'JavaScript',
-          usageCount: 5,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-15 18:30:45',
-          lastUsedAt: '2024-01-16 10:20:30',
-          isPopular: true,
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'JavaScript' },
+            usageCount: { type: 'number', example: 5 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+            isPopular: { type: 'boolean', example: true },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '标签不存在',
     schema: {
       example: {
-        code: 302,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的标签不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -301,11 +314,11 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取标签详情失败：数据库查询错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -363,32 +376,35 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '标签更新成功',
-    type: ApiResponseDto<TagResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '标签更新成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '标签更新成功' },
         data: {
-          id: 1,
-          name: 'JavaScript',
-          usageCount: 5,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-16 10:20:30',
-          lastUsedAt: '2024-01-16 10:20:30',
-          isPopular: true,
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'JavaScript' },
+            usageCount: { type: 'number', example: 5 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+            lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+            isPopular: { type: 'boolean', example: true },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 409,
+    status: StatusCodes.CONFLICT,
     description: '标签名称已存在',
     schema: {
       example: {
-        code: 303,
+        code: StatusCodes.CONFLICT,
         message: '标签 "TypeScript" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -396,11 +412,11 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '标签不存在',
     schema: {
       example: {
-        code: 302,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的标签不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -446,24 +462,24 @@ export class TagController {
     example: 1,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '标签删除成功',
     schema: {
-      example: {
-        code: 200,
-        message: '标签删除成功',
-        data: null,
-        timestamp: '2024-01-15 18:30:45',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '标签删除成功' },
+        data: { type: 'null', example: null },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '标签不存在',
-
     schema: {
       example: {
-        code: 302,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的标签不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -471,7 +487,6 @@ export class TagController {
     },
   })
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResponseDto<null>> {

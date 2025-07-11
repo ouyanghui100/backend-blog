@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -26,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { MethodGuard } from '../../auth/guards/method.guard';
+import { StatusCodes } from '../../common/constants/status-codes';
 import { CategorySeedService } from './category-seed.service';
 import { CategoryService } from './category.service';
 import {
@@ -106,31 +105,33 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '分类创建成功',
-    type: ApiResponseDto<CategoryResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '分类创建成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '分类创建成功' },
         data: {
-          id: 1,
-          name: '前端开发',
-          articleCount: 0,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: null, // 创建时为null
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: '前端开发' },
+            articleCount: { type: 'number', example: 0 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', nullable: true, example: null },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 409,
+    status: StatusCodes.CONFLICT,
     description: '分类名称已存在',
-
     schema: {
       example: {
-        code: 409,
+        code: StatusCodes.CONFLICT,
         message: '分类 "前端开发" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -169,33 +170,36 @@ export class CategoryController {
     example: '前端',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取分类列表成功',
-    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取分类列表成功',
-        data: [
-          {
-            id: 1,
-            name: '前端开发',
-            articleCount: 5,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-15 18:30:45',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取分类列表成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: '前端开发' },
+              articleCount: { type: 'number', example: 5 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
-
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取分类列表失败：数据库连接错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -232,33 +236,36 @@ export class CategoryController {
     example: 10,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取热门分类成功',
-    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取热门分类成功',
-        data: [
-          {
-            id: 1,
-            name: '前端开发',
-            articleCount: 15,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-15 18:30:45',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取热门分类成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: '前端开发' },
+              articleCount: { type: 'number', example: 15 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
-
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取热门分类失败：数据库查询错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -295,18 +302,21 @@ export class CategoryController {
     description: '获取分类的统计数据，包括总数和文章总数',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取分类统计成功',
-    type: ApiResponseDto<CategoryStatisticsDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取分类统计成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取分类统计成功' },
         data: {
-          total: 10,
-          totalArticles: 25,
+          type: 'object',
+          properties: {
+            total: { type: 'number', example: 10 },
+            totalArticles: { type: 'number', example: 25 },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
@@ -329,30 +339,33 @@ export class CategoryController {
     example: 1,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取分类详情成功',
-    type: ApiResponseDto<CategoryResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取分类详情成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取分类详情成功' },
         data: {
-          id: 1,
-          name: '前端开发',
-          articleCount: 5,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-15 18:30:45',
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: '前端开发' },
+            articleCount: { type: 'number', example: 5 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', example: '2024-01-15 18:30:45' },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '分类不存在',
     schema: {
       example: {
-        code: 404,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的分类不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -360,11 +373,11 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 500,
+    status: StatusCodes.INTERNAL_ERROR,
     description: '服务器内部错误',
     schema: {
       example: {
-        code: 500,
+        code: StatusCodes.INTERNAL_ERROR,
         message: '获取分类详情失败：数据库查询错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -422,30 +435,33 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '分类更新成功',
-    type: ApiResponseDto<CategoryResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '分类更新成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '分类更新成功' },
         data: {
-          id: 1,
-          name: '前端开发',
-          articleCount: 5,
-          createdAt: '2024-01-15 18:30:45',
-          updatedAt: '2024-01-16 10:20:30',
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: '前端开发' },
+            articleCount: { type: 'number', example: 5 },
+            createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+            updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 409,
+    status: StatusCodes.CONFLICT,
     description: '分类名称已存在',
     schema: {
       example: {
-        code: 409,
+        code: StatusCodes.CONFLICT,
         message: '分类 "全栈开发" 已存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -453,11 +469,11 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '分类不存在',
     schema: {
       example: {
-        code: 404,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的分类不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -508,23 +524,24 @@ export class CategoryController {
     example: 1,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '分类删除成功',
     schema: {
-      example: {
-        code: 200,
-        message: '分类删除成功',
-        data: null,
-        timestamp: '2024-01-15 18:30:45',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '分类删除成功' },
+        data: { type: 'null', example: null },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 403,
+    status: StatusCodes.FORBIDDEN,
     description: '分类下还有文章，无法删除',
     schema: {
       example: {
-        code: 403,
+        code: StatusCodes.FORBIDDEN,
         message: '分类下还有文章，无法删除',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -532,11 +549,11 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 404,
+    status: StatusCodes.NOT_FOUND,
     description: '分类不存在',
     schema: {
       example: {
-        code: 404,
+        code: StatusCodes.NOT_FOUND,
         message: 'ID为 1 的分类不存在',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -544,7 +561,6 @@ export class CategoryController {
     },
   })
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResponseDto<null>> {

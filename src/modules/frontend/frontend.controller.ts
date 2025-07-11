@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../auth/decorators/public.decorator';
+import { StatusCodes } from '../../common/constants/status-codes';
 import { ApiResponseDto } from '../../common/dto/api-response.dto';
 import { CategoryService } from '../category/category.service';
 import { CategoryResponseDto, QueryCategoryDto } from '../category/dto';
@@ -34,25 +35,29 @@ export class FrontendController {
     example: 'JavaScript',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取标签列表成功',
-    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取标签列表成功',
-        data: [
-          {
-            id: 1,
-            name: 'JavaScript',
-            usageCount: 15,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-16 10:20:30',
-            lastUsedAt: '2024-01-16 10:20:30',
-            isPopular: true,
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取标签列表成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'JavaScript' },
+              usageCount: { type: 'number', example: 15 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              isPopular: { type: 'boolean', example: true },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
@@ -80,25 +85,29 @@ export class FrontendController {
     type: Number,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取热门标签成功',
-    type: ApiResponseDto<TagResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取热门标签成功',
-        data: [
-          {
-            id: 1,
-            name: 'JavaScript',
-            usageCount: 25,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-16 10:20:30',
-            lastUsedAt: '2024-01-16 10:20:30',
-            isPopular: true,
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取热门标签成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'JavaScript' },
+              usageCount: { type: 'number', example: 25 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              lastUsedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+              isPopular: { type: 'boolean', example: true },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
@@ -126,23 +135,27 @@ export class FrontendController {
     example: '前端',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取分类列表成功',
-    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取分类列表成功',
-        data: [
-          {
-            id: 1,
-            name: '前端开发',
-            articleCount: 15,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-16 10:20:30',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取分类列表成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: '前端开发' },
+              articleCount: { type: 'number', example: 15 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
@@ -172,23 +185,27 @@ export class FrontendController {
     type: Number,
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取热门分类成功',
-    type: ApiResponseDto<CategoryResponseDto[]>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取热门分类成功',
-        data: [
-          {
-            id: 1,
-            name: '前端开发',
-            articleCount: 15,
-            createdAt: '2024-01-15 18:30:45',
-            updatedAt: '2024-01-16 10:20:30',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取热门分类成功' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: '前端开发' },
+              articleCount: { type: 'number', example: 15 },
+              createdAt: { type: 'string', example: '2024-01-15 18:30:45' },
+              updatedAt: { type: 'string', example: '2024-01-16 10:20:30' },
+            },
           },
-        ],
-        timestamp: '2024-01-15 18:30:45',
+        },
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })

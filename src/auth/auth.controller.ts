@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
   Request,
   UnauthorizedException,
@@ -16,6 +14,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { StatusCodes } from '../common/constants/status-codes';
 import { ApiResponseDto } from '../common/dto/api-response.dto';
 import { AuthService } from './auth.service';
 import {
@@ -56,31 +55,40 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '登录成功',
-    type: ApiResponseDto<AuthResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '登录成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '登录成功' },
         data: {
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-          user: {
-            id: 1,
-            username: 'admin',
-            role: 'admin',
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                username: { type: 'string', example: 'admin' },
+                role: { type: 'string', example: 'admin' },
+              },
+            },
           },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: StatusCodes.BAD_REQUEST,
     description: '用户名或密码错误',
     schema: {
       example: {
-        code: 400,
+        code: StatusCodes.BAD_REQUEST,
         message: '用户名或密码错误',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -88,7 +96,6 @@ export class AuthController {
     },
   })
   @Post('login')
-  @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginDto: LoginDto,
   ): Promise<ApiResponseDto<AuthResponseDto>> {
@@ -114,27 +121,35 @@ export class AuthController {
     description: '生成游客访问令牌，游客只能执行查询操作',
   })
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '游客访问令牌生成成功',
-    type: ApiResponseDto<AuthResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '游客访问令牌生成成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '游客访问令牌生成成功' },
         data: {
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-          user: {
-            id: 2,
-            username: 'guest',
-            role: 'guest',
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 2 },
+                username: { type: 'string', example: 'guest' },
+                role: { type: 'string', example: 'guest' },
+              },
+            },
           },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @Post('guest')
-  @HttpCode(HttpStatus.OK)
   async guestAccess(): Promise<ApiResponseDto<AuthResponseDto>> {
     const result = await this.authService.guestAccess();
     return ApiResponseDto.success(result, '游客访问令牌生成成功');
@@ -149,28 +164,31 @@ export class AuthController {
   })
   @ApiBearerAuth()
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '获取用户信息成功',
-    type: ApiResponseDto<UserResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '获取用户信息成功',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '获取用户信息成功' },
         data: {
-          id: 1,
-          username: 'admin',
-          role: 'admin',
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            username: { type: 'string', example: 'admin' },
+            role: { type: 'string', example: 'admin' },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: StatusCodes.BAD_REQUEST,
     description: '用户信息不完整',
     schema: {
       example: {
-        code: 400,
+        code: StatusCodes.BAD_REQUEST,
         message: '用户信息不完整',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -178,11 +196,11 @@ export class AuthController {
     },
   })
   @ApiResponse({
-    status: 401,
+    status: StatusCodes.UNAUTHORIZED,
     description: 'Token失效或未提供',
     schema: {
       example: {
-        code: 401,
+        code: StatusCodes.UNAUTHORIZED,
         message: '登录状态已失效，请重新登录',
         data: null,
         timestamp: '2024-01-15 18:30:45',
@@ -215,27 +233,30 @@ export class AuthController {
   })
   @ApiBearerAuth()
   @ApiResponse({
-    status: 200,
+    status: StatusCodes.SUCCESS,
     description: '令牌有效',
-    type: ApiResponseDto<AuthCheckResponseDto>,
     schema: {
-      example: {
-        code: 200,
-        message: '令牌有效',
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: StatusCodes.SUCCESS },
+        message: { type: 'string', example: '令牌有效' },
         data: {
-          valid: true,
-          role: 'admin',
+          type: 'object',
+          properties: {
+            valid: { type: 'boolean', example: true },
+            role: { type: 'string', example: 'admin' },
+          },
         },
-        timestamp: '2024-01-15 18:30:45',
+        timestamp: { type: 'string', example: '2024-01-15 18:30:45' },
       },
     },
   })
   @ApiResponse({
-    status: 401,
+    status: StatusCodes.UNAUTHORIZED,
     description: '令牌失效或未提供',
     schema: {
       example: {
-        code: 401,
+        code: StatusCodes.UNAUTHORIZED,
         message: '登录状态已失效，请重新登录',
         data: null,
         timestamp: '2024-01-15 18:30:45',
