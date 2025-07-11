@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -100,6 +101,7 @@ export class TagController {
           lastUsedAt: null,
           isPopular: false,
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -123,8 +125,16 @@ export class TagController {
     },
   })
   @ApiResponse({
-    status: 400,
+    status: 200,
     description: '标签名称已存在',
+    schema: {
+      example: {
+        code: 303,
+        message: '标签 "JavaScript" 已存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -173,6 +183,7 @@ export class TagController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -222,6 +233,7 @@ export class TagController {
             isPopular: true,
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -271,12 +283,21 @@ export class TagController {
           lastUsedAt: '2024-01-16 10:20:30',
           isPopular: true,
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
-    status: 404,
+    status: 200,
     description: '标签不存在',
+    schema: {
+      example: {
+        code: 302,
+        message: 'ID为 1 的标签不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Get(':id')
   async findOne(
@@ -284,14 +305,14 @@ export class TagController {
   ): Promise<ApiResponseDto<TagResponseDto>> {
     try {
       const tag = await this.tagService.findOne(id);
-      if (!tag) {
-        return ApiResponseDto.resourceNotFound('未找到对应标签');
-      }
       return ApiResponseDto.success(
         new TagResponseDto(tag),
         '获取标签详情成功',
       );
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`获取标签详情失败：${errorMessage}`);
     }
@@ -344,16 +365,33 @@ export class TagController {
           lastUsedAt: '2024-01-16 10:20:30',
           isPopular: true,
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: 200,
     description: '标签名称已存在',
+    schema: {
+      example: {
+        code: 303,
+        message: '标签 "TypeScript" 已存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @ApiResponse({
-    status: 404,
+    status: 200,
     description: '标签不存在',
+    schema: {
+      example: {
+        code: 302,
+        message: 'ID为 1 的标签不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Patch(':id')
   async update(
@@ -373,6 +411,9 @@ export class TagController {
       const tag = await this.tagService.update(id, updateTagDto);
       return ApiResponseDto.success(new TagResponseDto(tag), '标签更新成功');
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`更新标签失败：${errorMessage}`);
     }
@@ -391,15 +432,31 @@ export class TagController {
     example: 1,
   })
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: '标签删除成功',
+    schema: {
+      example: {
+        code: 200,
+        message: '标签删除成功',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @ApiResponse({
-    status: 404,
+    status: 200,
     description: '标签不存在',
+    schema: {
+      example: {
+        code: 302,
+        message: 'ID为 1 的标签不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResponseDto<null>> {
@@ -407,6 +464,9 @@ export class TagController {
       await this.tagService.remove(id);
       return ApiResponseDto.success(null, '标签删除成功');
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`删除标签失败：${errorMessage}`);
     }

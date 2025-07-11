@@ -66,23 +66,39 @@ export class AuthController {
             role: 'admin',
           },
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
-    status: 401,
+    status: 200,
     description: '用户名或密码错误',
+    schema: {
+      example: {
+        code: 301,
+        message: '用户名或密码错误',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginDto: LoginDto,
   ): Promise<ApiResponseDto<AuthResponseDto>> {
-    const result = await this.authService.loginAdmin(
-      loginDto.username,
-      loginDto.password,
-    );
-    return ApiResponseDto.success(result, '登录成功');
+    try {
+      const result = await this.authService.loginAdmin(
+        loginDto.username,
+        loginDto.password,
+      );
+      return ApiResponseDto.success(result, '登录成功');
+    } catch (error: unknown) {
+      if (error instanceof UnauthorizedException) {
+        return ApiResponseDto.validationFailed('用户名或密码错误');
+      }
+      return ApiResponseDto.internalError('登录失败');
+    }
   }
 
   /**
@@ -107,6 +123,7 @@ export class AuthController {
             role: 'guest',
           },
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -137,12 +154,33 @@ export class AuthController {
           username: 'admin',
           role: 'admin',
         },
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: '用户信息不完整',
+    schema: {
+      example: {
+        code: 301,
+        message: '用户信息不完整',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
     status: 401,
-    description: '未授权访问',
+    description: 'Token失效或未提供',
+    schema: {
+      example: {
+        code: 401,
+        message: '登录状态已失效，请重新登录',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -151,7 +189,7 @@ export class AuthController {
   ): ApiResponseDto<{ id: number; username: string; role: string }> {
     const { userId, username, role } = req.user;
     if (!userId || !username || !role) {
-      throw new UnauthorizedException('用户信息不完整');
+      return ApiResponseDto.validationFailed('用户信息不完整');
     }
     return ApiResponseDto.success(
       {
@@ -182,12 +220,21 @@ export class AuthController {
           valid: true,
           role: 'admin',
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
     status: 401,
-    description: '令牌无效或已过期',
+    description: '令牌失效或未提供',
+    schema: {
+      example: {
+        code: 401,
+        message: '登录状态已失效，请重新登录',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @UseGuards(JwtAuthGuard)
   @Get('check')

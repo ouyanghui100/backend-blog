@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -98,6 +99,7 @@ export class CategoryController {
           createdAt: '2024-01-15 18:30:45',
           updatedAt: null, // 创建时为null
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -121,8 +123,16 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 400,
+    status: 200,
     description: '分类名称已存在',
+    schema: {
+      example: {
+        code: 303,
+        message: '分类 "前端开发" 已存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -174,6 +184,7 @@ export class CategoryController {
             updatedAt: '2024-01-15 18:30:45',
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -222,6 +233,7 @@ export class CategoryController {
             updatedAt: '2024-01-15 18:30:45',
           },
         ],
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -265,6 +277,7 @@ export class CategoryController {
           total: 10,
           totalArticles: 25,
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
@@ -305,12 +318,9 @@ export class CategoryController {
           createdAt: '2024-01-15 18:30:45',
           updatedAt: '2024-01-15 18:30:45',
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
-  })
-  @ApiResponse({
-    status: 404,
-    description: '分类不存在',
   })
   @Get(':id')
   async findOne(
@@ -318,14 +328,14 @@ export class CategoryController {
   ): Promise<ApiResponseDto<CategoryResponseDto>> {
     try {
       const category = await this.categoryService.findOne(id);
-      if (!category) {
-        return ApiResponseDto.resourceNotFound('未找到对应分类');
-      }
       return ApiResponseDto.success(
         new CategoryResponseDto(category),
         '获取分类详情成功',
       );
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`获取分类详情失败：${errorMessage}`);
     }
@@ -376,16 +386,33 @@ export class CategoryController {
           createdAt: '2024-01-15 18:30:45',
           updatedAt: '2024-01-16 10:20:30',
         },
+        timestamp: '2024-01-15 18:30:45',
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: 200,
     description: '分类名称已存在',
+    schema: {
+      example: {
+        code: 303,
+        message: '分类 "全栈开发" 已存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @ApiResponse({
-    status: 404,
+    status: 200,
     description: '分类不存在',
+    schema: {
+      example: {
+        code: 302,
+        message: 'ID为 1 的分类不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Patch(':id')
   async update(
@@ -410,6 +437,9 @@ export class CategoryController {
         '分类更新成功',
       );
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`更新分类失败：${errorMessage}`);
     }
@@ -428,19 +458,43 @@ export class CategoryController {
     example: 1,
   })
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: '分类删除成功',
+    schema: {
+      example: {
+        code: 200,
+        message: '分类删除成功',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @ApiResponse({
-    status: 400,
+    status: 200,
     description: '分类下还有文章，无法删除',
+    schema: {
+      example: {
+        code: 304,
+        message: '分类下还有文章，无法删除',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @ApiResponse({
-    status: 404,
+    status: 200,
     description: '分类不存在',
+    schema: {
+      example: {
+        code: 302,
+        message: 'ID为 1 的分类不存在',
+        data: null,
+        timestamp: '2024-01-15 18:30:45',
+      },
+    },
   })
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResponseDto<null>> {
@@ -448,6 +502,9 @@ export class CategoryController {
       await this.categoryService.remove(id);
       return ApiResponseDto.success(null, '分类删除成功');
     } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        return ApiResponseDto.resourceNotFound(error.message);
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return ApiResponseDto.internalError(`删除分类失败：${errorMessage}`);
     }

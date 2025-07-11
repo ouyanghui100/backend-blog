@@ -6,7 +6,6 @@ import { StatusCode, StatusCodes } from '../constants/status-codes';
  */
 interface ApiResponseOptions<T> {
   code: StatusCode;
-  success: boolean;
   message: string;
   data: T;
   httpStatus?: number;
@@ -21,12 +20,6 @@ export class ApiResponseDto<T = unknown> {
     example: 200,
   })
   code: StatusCode;
-
-  @ApiProperty({
-    description: '请求是否成功',
-    example: true,
-  })
-  success: boolean;
 
   @ApiProperty({
     description: '响应消息',
@@ -51,7 +44,6 @@ export class ApiResponseDto<T = unknown> {
 
   constructor(options: ApiResponseOptions<T>) {
     this.code = options.code;
-    this.success = options.success;
     this.message = options.message;
     this.data = options.data;
     this.httpStatus = options.httpStatus;
@@ -67,7 +59,6 @@ export class ApiResponseDto<T = unknown> {
   static success<T>(data: T, message = '操作成功'): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.SUCCESS,
-      success: true,
       message,
       data,
       httpStatus: 200,
@@ -84,14 +75,13 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code,
-      success: false,
       message,
       data,
       httpStatus: 200,
     });
   }
 
-  // =================== 业务层错误 (HTTP 200，业务code 300-400 + 401) ===================
+  // =================== 业务层错误 (HTTP 200，业务code 300-400) ===================
 
   /**
    * 创建通用业务错误响应 (HTTP 200, code 300)
@@ -102,7 +92,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.BUSINESS_ERROR,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -118,7 +107,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.VALIDATION_FAILED,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -134,7 +122,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.RESOURCE_NOT_FOUND,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -150,7 +137,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.RESOURCE_ALREADY_EXISTS,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -166,7 +152,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.OPERATION_FORBIDDEN,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -182,23 +167,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.PARAMETER_INVALID,
-      success: false,
-      message,
-      data,
-      httpStatus: 200,
-    });
-  }
-
-  /**
-   * 创建登录状态失效响应 (HTTP 200, code 401) - 特殊业务错误
-   */
-  static loginExpired<T = null>(
-    message = '登录状态已失效，请重新登录',
-    data: T = null as T,
-  ): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.LOGIN_EXPIRED,
-      success: false,
       message,
       data,
       httpStatus: 200,
@@ -206,6 +174,21 @@ export class ApiResponseDto<T = unknown> {
   }
 
   // =================== HTTP层面错误 (HTTP状态码与code一致) ===================
+
+  /**
+   * 创建登录状态失效响应 (HTTP 401, code 401)
+   */
+  static loginExpired<T = null>(
+    message = '登录状态已失效，请重新登录',
+    data: T = null as T,
+  ): ApiResponseDto<T> {
+    return new ApiResponseDto({
+      code: StatusCodes.LOGIN_EXPIRED,
+      message,
+      data,
+      httpStatus: 401,
+    });
+  }
 
   /**
    * 创建请求超时响应 (HTTP 408, code 408)
@@ -216,7 +199,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.REQUEST_TIMEOUT,
-      success: false,
       message,
       data,
       httpStatus: 408,
@@ -232,7 +214,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.INTERNAL_ERROR,
-      success: false,
       message,
       data,
       httpStatus: 500,
@@ -248,7 +229,6 @@ export class ApiResponseDto<T = unknown> {
   ): ApiResponseDto<T> {
     return new ApiResponseDto({
       code: StatusCodes.SERVICE_BUSY,
-      success: false,
       message,
       data,
       httpStatus: 503,
