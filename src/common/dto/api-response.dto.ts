@@ -65,17 +65,6 @@ export class ApiResponseDto<T = unknown> {
   }
 
   /**
-   * 创建资源成功响应 (HTTP 201)
-   */
-  static created<T>(data: T, message = '创建成功'): ApiResponseDto<T> {
-    return new ApiResponseDto({
-      code: StatusCodes.CREATED,
-      message,
-      data,
-    });
-  }
-
-  /**
    * 创建请求错误响应 (HTTP 400)
    */
   static badRequest<T = null>(

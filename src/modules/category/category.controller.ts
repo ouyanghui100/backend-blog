@@ -106,12 +106,12 @@ export class CategoryController {
     },
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '分类创建成功',
     type: ApiResponseDto<CategoryResponseDto>,
     schema: {
       example: {
-        code: 201,
+        code: 200,
         message: '分类创建成功',
         data: {
           id: 1,
@@ -138,7 +138,6 @@ export class CategoryController {
     },
   })
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<ApiResponseDto<CategoryResponseDto>> {
@@ -150,7 +149,7 @@ export class CategoryController {
     }
 
     const category = await this.categoryService.create(createCategoryDto);
-    return ApiResponseDto.created(
+    return ApiResponseDto.success(
       new CategoryResponseDto(category),
       '分类创建成功',
     );

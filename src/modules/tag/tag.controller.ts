@@ -60,7 +60,7 @@ export class TagController {
     description: '创建一个新的标签',
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '标签创建成功',
     type: ApiResponseDto<TagResponseDto>,
     schema: {
@@ -112,7 +112,6 @@ export class TagController {
     },
   })
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createTagDto: CreateTagDto,
   ): Promise<ApiResponseDto<TagResponseDto>> {
