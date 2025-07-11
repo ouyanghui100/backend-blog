@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
   );
 
   // 设置全局路径前缀
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
 
   // 获取端口号
   const port = process.env.PORT ?? 3000;
@@ -97,7 +97,7 @@ async function bootstrap(): Promise<void> {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
+  SwaggerModule.setup('api/v1/docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true, // 保持授权状态
       docExpansion: 'none', // 默认不展开文档
