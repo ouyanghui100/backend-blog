@@ -39,28 +39,3 @@ export abstract class BaseResponseDto {
       : null;
   }
 }
-
-/**
- * API 统一响应格式
- */
-export class ApiResponseDto<T> {
-  success: boolean;
-  message: string;
-  data?: T;
-  error?: string;
-
-  constructor(success: boolean, message: string, data?: T, error?: string) {
-    this.success = success;
-    this.message = message;
-    this.data = data;
-    this.error = error;
-  }
-
-  static success<T>(data: T, message: string = '操作成功'): ApiResponseDto<T> {
-    return new ApiResponseDto(true, message, data);
-  }
-
-  static error<T>(message: string, error?: string): ApiResponseDto<T | null> {
-    return new ApiResponseDto<T | null>(false, message, null, error);
-  }
-}

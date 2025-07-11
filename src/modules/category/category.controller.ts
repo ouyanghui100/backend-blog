@@ -1,12 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -66,7 +64,7 @@ export class CategoryController {
   //   description: '重置成功',
   //   schema: {
   //     example: {
-  //       success: true,
+  //       code: 200,
   //       message: '分类数据重置成功',
   //       data: null,
   //     },
@@ -91,7 +89,7 @@ export class CategoryController {
     description: '分类创建成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '分类创建成功',
         data: {
           id: 1,
@@ -135,7 +133,9 @@ export class CategoryController {
       createCategoryDto.name,
     );
     if (existingCategory) {
-      throw new BadRequestException(`分类 "${createCategoryDto.name}" 已存在`);
+      return ApiResponseDto.resourceExists(
+        `分类 "${createCategoryDto.name}" 已存在`,
+      );
     }
 
     const category = await this.categoryService.create(createCategoryDto);
@@ -163,7 +163,7 @@ export class CategoryController {
     description: '获取分类列表成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取分类列表成功',
         data: [
           {
@@ -189,8 +189,7 @@ export class CategoryController {
       return ApiResponseDto.success(result, '获取分类列表成功');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      // 统一返回空数组，避免类型不匹配
-      return ApiResponseDto.success([], `获取分类列表失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取分类列表失败：${errorMessage}`);
     }
   }
 
@@ -212,7 +211,7 @@ export class CategoryController {
     description: '获取热门分类成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取热门分类成功',
         data: [
           {
@@ -244,8 +243,7 @@ export class CategoryController {
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      // 统一返回空数组，避免类型不匹配
-      return ApiResponseDto.success([], `获取热门分类失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取热门分类失败：${errorMessage}`);
     }
   }
 
@@ -261,7 +259,7 @@ export class CategoryController {
     description: '获取分类统计成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取分类统计成功',
         data: {
           total: 10,
@@ -298,7 +296,7 @@ export class CategoryController {
     description: '获取分类详情成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取分类详情成功',
         data: {
           id: 1,
@@ -321,7 +319,7 @@ export class CategoryController {
     try {
       const category = await this.categoryService.findOne(id);
       if (!category) {
-        throw new NotFoundException('未找到对应分类');
+        return ApiResponseDto.resourceNotFound('未找到对应分类');
       }
       return ApiResponseDto.success(
         new CategoryResponseDto(category),
@@ -329,7 +327,7 @@ export class CategoryController {
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      throw new NotFoundException(`获取分类详情失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取分类详情失败：${errorMessage}`);
     }
   }
 
@@ -369,7 +367,7 @@ export class CategoryController {
     description: '分类更新成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '分类更新成功',
         data: {
           id: 1,
@@ -399,17 +397,22 @@ export class CategoryController {
         updateCategoryDto.name,
       );
       if (existingCategory && existingCategory.id !== id) {
-        throw new BadRequestException(
+        return ApiResponseDto.resourceExists(
           `分类 "${updateCategoryDto.name}" 已存在`,
         );
       }
     }
 
-    const category = await this.categoryService.update(id, updateCategoryDto);
-    return ApiResponseDto.success(
-      new CategoryResponseDto(category),
-      '分类更新成功',
-    );
+    try {
+      const category = await this.categoryService.update(id, updateCategoryDto);
+      return ApiResponseDto.success(
+        new CategoryResponseDto(category),
+        '分类更新成功',
+      );
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      return ApiResponseDto.internalError(`更新分类失败：${errorMessage}`);
+    }
   }
 
   /**
@@ -446,7 +449,7 @@ export class CategoryController {
       return ApiResponseDto.success(null, '分类删除成功');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      throw new BadRequestException(`删除分类失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`删除分类失败：${errorMessage}`);
     }
   }
 }

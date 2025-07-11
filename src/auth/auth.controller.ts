@@ -56,7 +56,7 @@ export class AuthController {
     description: '登录成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '登录成功',
         data: {
           accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
@@ -97,7 +97,7 @@ export class AuthController {
     description: '游客访问令牌生成成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '游客访问令牌生成成功',
         data: {
           accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
@@ -130,7 +130,7 @@ export class AuthController {
     description: '获取用户信息成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取用户信息成功',
         data: {
           id: 1,
@@ -176,7 +176,7 @@ export class AuthController {
     description: '令牌有效',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '令牌有效',
         data: {
           valid: true,

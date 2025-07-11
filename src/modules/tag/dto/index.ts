@@ -7,5 +7,6 @@ export { QueryTagDto } from './query-tag.dto';
 export { TagResponseDto } from './tag-response.dto';
 export { UpdateTagDto } from './update-tag.dto';
 
-// 从公共位置导入API响应DTO
-export { ApiResponseDto } from '../../../common/dto/base-response.dto';
+// 从公共模块导出统一的响应格式
+export { ApiResponseDto, StatusCodes } from '../../../common';
+export type { StatusCode } from '../../../common';

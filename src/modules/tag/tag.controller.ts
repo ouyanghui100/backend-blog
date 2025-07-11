@@ -1,12 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -66,7 +64,7 @@ export class TagController {
   //   description: '重置成功',
   //   schema: {
   //     example: {
-  //       success: true,
+  //       code: 200,
   //       message: '标签数据重置成功',
   //       data: null,
   //     },
@@ -91,7 +89,7 @@ export class TagController {
     description: '标签创建成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '标签创建成功',
         data: {
           id: 1,
@@ -135,7 +133,9 @@ export class TagController {
   ): Promise<ApiResponseDto<TagResponseDto>> {
     const existingTag = await this.tagService.findByName(createTagDto.name);
     if (existingTag) {
-      throw new BadRequestException(`标签 "${createTagDto.name}" 已存在`);
+      return ApiResponseDto.resourceExists(
+        `标签 "${createTagDto.name}" 已存在`,
+      );
     }
 
     const tag = await this.tagService.create(createTagDto);
@@ -160,7 +160,7 @@ export class TagController {
     description: '获取标签列表成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取标签列表成功',
         data: [
           {
@@ -186,8 +186,7 @@ export class TagController {
       return ApiResponseDto.success(result, '获取标签列表成功');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      // 统一返回空数组，避免类型不匹配
-      return ApiResponseDto.success([], `获取标签列表失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取标签列表失败：${errorMessage}`);
     }
   }
 
@@ -210,7 +209,7 @@ export class TagController {
     description: '获取热门标签成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取热门标签成功',
         data: [
           {
@@ -240,8 +239,7 @@ export class TagController {
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      // 统一返回空数组，避免类型不匹配
-      return ApiResponseDto.success([], `获取热门标签失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取热门标签失败：${errorMessage}`);
     }
   }
 
@@ -262,7 +260,7 @@ export class TagController {
     description: '获取标签详情成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取标签详情成功',
         data: {
           id: 1,
@@ -287,7 +285,7 @@ export class TagController {
     try {
       const tag = await this.tagService.findOne(id);
       if (!tag) {
-        throw new NotFoundException('未找到对应标签');
+        return ApiResponseDto.resourceNotFound('未找到对应标签');
       }
       return ApiResponseDto.success(
         new TagResponseDto(tag),
@@ -295,7 +293,7 @@ export class TagController {
       );
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      throw new NotFoundException(`获取标签详情失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`获取标签详情失败：${errorMessage}`);
     }
   }
 
@@ -335,7 +333,7 @@ export class TagController {
     description: '标签更新成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '标签更新成功',
         data: {
           id: 1,
@@ -365,12 +363,19 @@ export class TagController {
     if (updateTagDto.name) {
       const existingTag = await this.tagService.findByName(updateTagDto.name);
       if (existingTag && existingTag.id !== id) {
-        throw new BadRequestException(`标签 "${updateTagDto.name}" 已存在`);
+        return ApiResponseDto.resourceExists(
+          `标签 "${updateTagDto.name}" 已存在`,
+        );
       }
     }
 
-    const tag = await this.tagService.update(id, updateTagDto);
-    return ApiResponseDto.success(new TagResponseDto(tag), '标签更新成功');
+    try {
+      const tag = await this.tagService.update(id, updateTagDto);
+      return ApiResponseDto.success(new TagResponseDto(tag), '标签更新成功');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      return ApiResponseDto.internalError(`更新标签失败：${errorMessage}`);
+    }
   }
 
   /**
@@ -403,7 +408,7 @@ export class TagController {
       return ApiResponseDto.success(null, '标签删除成功');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '未知错误';
-      throw new NotFoundException(`删除标签失败：${errorMessage}`);
+      return ApiResponseDto.internalError(`删除标签失败：${errorMessage}`);
     }
   }
 }

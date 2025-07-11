@@ -38,7 +38,7 @@ export class FrontendController {
     description: '获取标签列表成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取标签列表成功',
         data: [
           {
@@ -82,7 +82,7 @@ export class FrontendController {
     description: '获取热门标签成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取热门标签成功',
         data: [
           {
@@ -155,7 +155,7 @@ export class FrontendController {
     description: '获取热门分类成功',
     schema: {
       example: {
-        success: true,
+        code: 200,
         message: '获取热门分类成功',
         data: [
           {

@@ -2,6 +2,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
@@ -25,6 +26,9 @@ async function bootstrap(): Promise<void> {
       disableErrorMessages: false, // 生产环境可设为true
     }),
   );
+
+  // 启用全局响应拦截器
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // 设置全局路径前缀
   app.setGlobalPrefix('api/v1');

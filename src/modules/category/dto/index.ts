@@ -7,5 +7,6 @@ export { CreateCategoryDto } from './create-category.dto';
 export { QueryCategoryDto } from './query-category.dto';
 export { UpdateCategoryDto } from './update-category.dto';
 
-// 从公共位置导入API响应DTO
-export { ApiResponseDto } from '../../../common/dto/base-response.dto';
+// 从公共模块导出统一的响应格式
+export { ApiResponseDto, StatusCodes } from '../../../common';
+export type { StatusCode } from '../../../common';
