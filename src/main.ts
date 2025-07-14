@@ -121,6 +121,10 @@ async function bootstrap(): Promise<void> {
   logger.log(`🚀 应用成功启动，监听端口: ${port}`);
   logger.log(`📚 API文档地址: http://localhost:${port}/api/docs`);
   logger.log(`🌐 CORS已启用，支持跨域请求`);
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 
 // 启动应用并处理错误

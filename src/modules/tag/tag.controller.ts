@@ -484,7 +484,10 @@ export class TagController {
         ...(updateData.updatedAt && { updatedAt: updateData.updatedAt }),
       };
 
-      const tag = await this.tagService.update(id, updatePayload as UpdateTagDto);
+      const tag = await this.tagService.update(
+        id,
+        updatePayload as UpdateTagDto,
+      );
       return ApiResponseDto.success(new TagResponseDto(tag), '标签更新成功');
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
