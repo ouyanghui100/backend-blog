@@ -239,31 +239,10 @@ API_PREFIX=api
 
 **具体规则：**
 
-- **网络正常 + 业务成功**: HTTP 200 + code 200
-- **网络正常 + 一般业务错误**: HTTP 200 + code 300-400
-- **Token失效/认证错误**: HTTP 401 + code 401 (前端会执行logout)
-- **网络异常**: HTTP 408/500/503 + code 对应值
-
-**前端处理示例：**
-
-```javascript
-// 第一个回调：HTTP状态码是2xx，但可能有业务错误
-response => {
-  const { code, data, message } = response.data;
-  if (code === 200) {
-    return data; // 业务成功
-  } else {
-    // 业务错误，如 code 303(资源已存在)
-    showError(message);
-    return Promise.reject(response.data);
-  }
-},
-  // 第二个回调：HTTP状态码非2xx，网络层错误
-  error => {
-    const status = error.response?.status;
-    // 处理 401/408/500/503 等网络层错误
-  };
-```
+- **网络正常 + 业务成功**: code 200
+- **网络正常 + 一般业务错误**: code 300-400
+- **Token失效/认证错误**: code 401 (前端会执行logout)
+- **网络异常**: code 对应值
 
 #### 状态码说明
 
