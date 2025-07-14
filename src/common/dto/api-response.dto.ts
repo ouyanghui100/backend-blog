@@ -8,7 +8,7 @@ interface ApiResponseOptions<T> {
   code: StatusCode;
   message: string;
   data: T;
-  httpStatus?: number;
+  // httpStatus?: number;
 }
 
 /**
@@ -40,13 +40,13 @@ export class ApiResponseDto<T = unknown> {
   timestamp: string;
 
   // HTTP状态码，用于控制器设置HTTP响应状态
-  httpStatus?: number;
+  // httpStatus?: number;
 
   constructor(options: ApiResponseOptions<T>) {
     this.code = options.code;
     this.message = options.message;
     this.data = options.data;
-    this.httpStatus = options.httpStatus ?? options.code; // 默认HTTP状态码等于业务状态码
+    // this.httpStatus = options.httpStatus ?? options.code; // 默认HTTP状态码等于业务状态码
     this.timestamp = new Date()
       .toISOString()
       .replace('T', ' ')

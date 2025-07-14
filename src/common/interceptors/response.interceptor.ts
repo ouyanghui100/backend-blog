@@ -25,16 +25,16 @@ export class ResponseInterceptor<T>
       map((data: ApiResponseDto<T>) => {
         // 如果返回的是ApiResponseDto类型
         if (data && typeof data === 'object' && 'code' in data) {
-          const response = context.switchToHttp().getResponse();
+          // const response = context.switchToHttp().getResponse();
 
           // 如果有httpStatus，设置HTTP状态码
-          if (data.httpStatus) {
-            response.status(data.httpStatus);
-          }
+          // if (data.httpStatus) {
+          //   response.status(data.httpStatus);
+          // }
 
           // 移除httpStatus字段，不返回给客户端
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { httpStatus, ...responseData } = data;
+
+          const { ...responseData } = data;
           return responseData as ApiResponseDto<T>;
         }
 
