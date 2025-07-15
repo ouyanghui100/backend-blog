@@ -33,12 +33,12 @@ export default tseslint.config(
   },
   {
     rules: {
-      '@typescript-eslint/no-misused-promises': [
-        'error',
-        {
-          checksVoidReturn: false,
-        },
-      ],
+      // '@typescript-eslint/no-misused-promises': [
+      //   'error',
+      //   {
+      //     checksVoidReturn: false,
+      //   },
+      // ],
       // TypeScript 规则
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',

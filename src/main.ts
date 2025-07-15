@@ -123,6 +123,7 @@ async function bootstrap(): Promise<void> {
   logger.log(`🌐 CORS已启用，支持跨域请求`);
   if (module.hot) {
     module.hot.accept();
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     module.hot.dispose(() => app.close());
   }
 }
