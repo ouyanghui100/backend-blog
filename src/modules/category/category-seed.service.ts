@@ -107,30 +107,30 @@ export class CategorySeedService implements OnModuleInit {
   /**
    * 重置分类数据（开发环境使用）
    */
-  async resetCategories(): Promise<void> {
-    this.logger.warn('重置分类数据...');
+  // async resetCategories(): Promise<void> {
+  //   this.logger.warn('重置分类数据...');
 
-    try {
-      // 获取所有分类
-      const allCategories = await this.categoryService.findAll({});
+  //   try {
+  //     // 获取所有分类
+  //     const allCategories = await this.categoryService.findAll({});
 
-      // 删除所有分类（仅当没有关联文章时）
-      for (const category of allCategories) {
-        try {
-          await this.categoryService.remove(category.id);
-          this.logger.log(`删除分类: ${category.name}`);
-        } catch (error) {
-          this.logger.warn(`跳过分类 "${category.name}": ${error.message}`);
-        }
-      }
+  //     // 删除所有分类（仅当没有关联文章时）
+  //     for (const category of allCategories) {
+  //       try {
+  //         await this.categoryService.remove(category.id);
+  //         this.logger.log(`删除分类: ${category.name}`);
+  //       } catch (error) {
+  //         this.logger.warn(`跳过分类 "${category.name}": ${error.message}`);
+  //       }
+  //     }
 
-      // 重新创建默认分类
-      await this.seedCategories();
+  //     // 重新创建默认分类
+  //     await this.seedCategories();
 
-      this.logger.log('分类数据重置完成');
-    } catch (error) {
-      this.logger.error('分类数据重置失败', error);
-      throw error;
-    }
-  }
+  //     this.logger.log('分类数据重置完成');
+  //   } catch (error) {
+  //     this.logger.error('分类数据重置失败', error);
+  //     throw error;
+  //   }
+  // }
 }

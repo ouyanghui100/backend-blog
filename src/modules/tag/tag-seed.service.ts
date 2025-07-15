@@ -105,25 +105,25 @@ export class TagSeedService implements OnModuleInit {
   /**
    * 重置标签数据（开发环境使用）
    */
-  async resetTags(): Promise<void> {
-    this.logger.warn('重置标签数据...');
+  // async resetTags(): Promise<void> {
+  //   this.logger.warn('重置标签数据...');
 
-    try {
-      // 获取所有标签
-      const allTags = await this.tagService.findAll({});
+  //   try {
+  //     // 获取所有标签
+  //     const allTags = await this.tagService.findAll({});
 
-      // 删除所有标签
-      for (const tag of allTags) {
-        await this.tagService.remove(tag.id);
-      }
+  //     // 删除所有标签
+  //     for (const tag of allTags) {
+  //       await this.tagService.remove(tag.id);
+  //     }
 
-      // 重新创建默认标签
-      await this.seedTags();
+  //     // 重新创建默认标签
+  //     await this.seedTags();
 
-      this.logger.log('标签数据重置完成');
-    } catch (error) {
-      this.logger.error('标签数据重置失败', error);
-      throw error;
-    }
-  }
+  //     this.logger.log('标签数据重置完成');
+  //   } catch (error) {
+  //     this.logger.error('标签数据重置失败', error);
+  //     throw error;
+  //   }
+  // }
 }
