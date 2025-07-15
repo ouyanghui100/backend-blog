@@ -28,6 +28,7 @@ export class AuthInitService implements OnModuleInit {
       if (!hasAdmin) {
         this.logger.log('未发现管理员用户，正在创建默认管理员...');
 
+        // TODO: 后面应该数据库写死，不得把这个信息暴露在代码里面
         const admin = await this.authService.createAdmin(
           'ouyanghui',
           'keep2902897795',
