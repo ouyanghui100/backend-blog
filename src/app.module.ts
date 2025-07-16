@@ -14,9 +14,10 @@ import { TagModule } from './modules/tag/tag.module';
   imports: [
     // 配置模块
     ConfigModule.forRoot({
+      // 是否全局可以使用
       isGlobal: true,
       load: [databaseConfig],
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: [`.env.${process.env.NODE_ENV}`, '.env.local'],
     }),
     // 数据库模块
     TypeOrmModule.forRootAsync({
