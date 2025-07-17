@@ -48,9 +48,6 @@ export class Article {
   @Column({ type: 'longtext', comment: '文章内容 (Markdown格式)' })
   content: string;
 
-  @Column({ type: 'text', nullable: true, comment: '文章封面图片URL' })
-  coverImage?: string;
-
   // === 作者关联 ===
   @Column({ comment: '作者ID' })
   authorId: number;
@@ -127,11 +124,11 @@ export class Article {
   description?: string;
 
   // === 时间字段 ===
-  @CreateDateColumn({ comment: '创建时间' })
-  createdAt: Date;
+  @CreateDateColumn({ type: 'datetime', nullable: true, comment: '创建时间' })
+  createdAt?: Date;
 
-  @UpdateDateColumn({ comment: '更新时间' })
-  updatedAt: Date;
+  @UpdateDateColumn({ type: 'datetime', nullable: true, comment: '更新时间' })
+  updatedAt?: Date;
 
   @Column({
     type: 'datetime',
