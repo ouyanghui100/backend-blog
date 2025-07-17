@@ -37,9 +37,6 @@ export class User {
   })
   role: UserRole;
 
-  @Column({ default: true, comment: '是否激活' })
-  isActive: boolean;
-
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;
 

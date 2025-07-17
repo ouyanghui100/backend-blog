@@ -42,7 +42,6 @@ export class AuthService {
       where: {
         username,
         role: UserRole.ADMIN,
-        isActive: true,
       },
     });
 
@@ -105,7 +104,6 @@ export class AuthService {
       guestUser = this.userRepository.create({
         username: 'guest',
         role: UserRole.GUEST,
-        isActive: true,
         createdAt: DateUtil.now(),
       });
       await this.userRepository.save(guestUser);
@@ -142,7 +140,6 @@ export class AuthService {
       username,
       password: hashedPassword,
       role: UserRole.ADMIN,
-      isActive: true,
       createdAt: DateUtil.now(),
     });
 
@@ -156,7 +153,6 @@ export class AuthService {
     const count = await this.userRepository.count({
       where: {
         role: UserRole.ADMIN,
-        isActive: true,
       },
     });
     return count > 0;
