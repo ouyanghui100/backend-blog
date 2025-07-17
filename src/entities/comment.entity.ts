@@ -61,8 +61,8 @@ export class Comment {
   @Column({ length: 50, nullable: true, comment: '游客昵称' })
   guestName?: string;
 
-  @Column({ length: 100, nullable: true, comment: '游客邮箱' })
-  guestEmail?: string;
+  @Column({ length: 100, comment: '游客邮箱' })
+  guestEmail: string;
 
   @Column({ type: 'text', nullable: true, comment: '游客网站' })
   guestWebsite?: string;
