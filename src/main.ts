@@ -38,7 +38,7 @@ async function bootstrap(): Promise<void> {
 
   // 配置 Swagger 文档
   const config = new DocumentBuilder()
-    .setTitle('React-Nest 博客后端 API')
+    .setTitle('React-Next-Nest 博客后端 API')
     .setDescription(
       `
       ## 博客系统后端API文档
@@ -108,7 +108,7 @@ async function bootstrap(): Promise<void> {
       filter: true, // 启用过滤功能
       showRequestDuration: true, // 显示请求耗时
     },
-    customSiteTitle: 'React-Nest 博客 API 文档',
+    customSiteTitle: 'React-Next-Nest 博客 API 文档',
     customfavIcon: '/favicon.ico',
     customCss: `
       .swagger-ui .topbar { display: none; }
