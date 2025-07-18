@@ -31,8 +31,6 @@ export class TagService {
       // 优先使用前端传的创建时间，没有的话使用当前时间
       createdAt:
         DateUtil.parseDateTime(createTagDto.createdAt) || DateUtil.now(),
-      // 优先使用前端传的更新时间，没有的话为undefined（创建时通常不设置更新时间）
-      updatedAt: DateUtil.parseDateTime(createTagDto.updatedAt),
     });
     return await this.tagRepository.save(tag);
   }
