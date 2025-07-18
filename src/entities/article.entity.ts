@@ -44,7 +44,7 @@ export class Article {
   // slug?: string;
 
   // 如果前端没设置，采用自动截取前100字作为摘要
-  @Column({ type: 'text', nullable: true, comment: '文章摘要/简介' })
+  @Column({ type: 'text', comment: '文章摘要/简介' })
   summary: string;
 
   @Column({ type: 'longtext', comment: '文章内容 (Markdown格式)' })
