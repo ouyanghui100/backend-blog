@@ -51,7 +51,7 @@ export class CategoryService {
     // 构建查询选项
     const options: FindManyOptions<Category> = {
       where,
-      order: { name: 'ASC' },
+      // order: { name: 'ASC' },
     };
     return await this.categoryRepository.find(options);
   }
@@ -90,7 +90,7 @@ export class CategoryService {
   ): Promise<Category[]> {
     return await this.categoryRepository.find({
       where: { articleCount: MoreThanOrEqual(minArticleCount) },
-      order: { articleCount: 'DESC' },
+      // order: { articleCount: 'DESC' },
     });
   }
 

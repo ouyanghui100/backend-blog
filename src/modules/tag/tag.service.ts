@@ -87,7 +87,7 @@ export class TagService {
   async getPopularTags(minUsageCount: number = 10): Promise<Tag[]> {
     return await this.tagRepository.find({
       where: { usageCount: MoreThanOrEqual(minUsageCount) },
-      order: { usageCount: 'DESC' },
+      // order: { usageCount: 'DESC' },
     });
   }
 
